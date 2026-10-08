@@ -1,10 +1,10 @@
 # Chocopie runtime
 
-**Source publication is authorized from this reviewed history-free baseline.** The first `0.1.0` package release is being prepared; no packages are published yet.
+**Runtime 0.1.0 is published** for web, iOS and Android. Install the `@chocopie-moments` packages from npm; native SDK artifacts and the pinned Swift Package are in [release v0.1.0](https://github.com/Chocopie-Moments/runtime/releases/tag/v0.1.0).
 
-Development implementation of `.choco`: portable drawing and motion data, one Rust behavior engine, and a direct ThorVG vector renderer compiled for native platforms and WebAssembly.
+Implementation of `.choco`: portable drawing and motion data, one Rust behavior engine, and a direct ThorVG vector renderer compiled for native platforms and WebAssembly.
 
-**Unreleased. No production support or published npm installation is promised.** The codec is format 0, revision 2, semantics 1. iOS and React Native iOS lead native development. Android JNI/Kotlin and React Native 0.87.1 Fabric Release execution passed on an Android 16 ARM64 emulator, including R8-minified playback and an offline cold start. The independently packaged, minified Kotlin AAR consumer and strict Expo 57.0.17 / RN 0.86.3 / React 19.2.3 Android Release consumer also passed offline emulator execution. The founder approved `0.1.0` using completed functional checks; physical-device, minimum-OS and performance measurements are deferred until after cutover and remain unverified. Development packages now provide browser canvas playback, deterministic frame capture and a React adapter over the same WASM engine. The CLI installs from an explicit hash-pinned local or HTTPS release catalog; published package availability remains pending. Packed Chromium, Firefox and WebKit functional checks passed; device performance and product-release gates remain open.
+The codec is format 0, revision 2, semantics 1. iOS and React Native iOS lead native development. Android JNI/Kotlin and React Native 0.87.1 Fabric Release execution passed on an Android 16 ARM64 emulator, including R8-minified playback and an offline cold start. The independently packaged, minified Kotlin AAR consumer and strict Expo 57.0.17 / RN 0.86.3 / React 19.2.3 Android Release consumer also passed offline emulator execution. The founder approved `0.1.0` using completed functional checks; physical-device, minimum-OS and performance measurements are deferred until after cutover and remain unverified. The released packages provide browser canvas playback, deterministic frame capture and a React adapter over the same WASM engine. The CLI installs from an explicit hash-pinned local or HTTPS release catalog; all five packages are available at `0.1.0`. The clean release passed packed Chromium, Firefox and WebKit checks plus remote tagged-Swift resolution. Physical-device, minimum-OS/API and performance measurements remain unverified. The hosted product cutover is tracked separately.
 
 Playback is local and offline. Assets contain no executable host code, prompts, account data or remote renderer dependency. A runtime is shared by the moments in an application.
 
@@ -16,7 +16,7 @@ Playback is local and offline. Assets contain no executable host code, prompts, 
 - `native/android`: main-thread Kotlin/bitmap host and JNI adapter over the same Rust/ThorVG engine.
 - `packages/react-native`: Fabric adapters over the UIKit and Android owners; bare RN and strict Expo iOS/Android simulator/emulator execution passed for the recorded profiles; physical-device acceptance remains open.
 - `src/codec` and `src/format`: archive encoding/decoding, the portable drawing/motion contract, and admission checks. Product authoring schemas, SVG compilation and generation tools belong in the private product.
-- `packages/codec`, `packages/runtime`, `packages/react`, `packages/cli`: independently packed development artifacts.
+- `packages/codec`, `packages/runtime`, `packages/react`, `packages/cli`: published codec, web runtime, React adapter and installer.
 - `fixtures`: synthetic capability and malformed-input corpus. No customer/community artwork is included.
 
 ## Local checks
