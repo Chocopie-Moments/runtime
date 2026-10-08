@@ -17,7 +17,7 @@
     ],
     "jsx": "react-jsx",
     "paths": {
-      "@chocopie/runtime": [
+      "@chocopie-moments/runtime": [
         "./packages/runtime/src/index.ts"
       ]
     }

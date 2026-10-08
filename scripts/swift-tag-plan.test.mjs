@@ -80,7 +80,7 @@ function publishFixture(t) {
   const stage = join(repository, 'archive/package');
   mkdirSync(stage, { recursive: true });
   for (const name of ['codec', 'runtime', 'react', 'cli', 'react-native']) {
-    const full = `@chocopie/${name}`;
+    const full = `@chocopie-moments/${name}`;
     writeFileSync(join(stage, 'package.json'), JSON.stringify({ name: full, version: '0.1.0-dev.0', private: false }));
     const file = `${name}.tgz`;
     execFileSync('tar', ['-czf', join(release, file), '-C', join(repository, 'archive'), 'package']);
@@ -89,8 +89,8 @@ function publishFixture(t) {
   writeFileSync(join(release, 'choco-android-sdk-release.aar'), 'reviewed SDK');
   receipt.native['choco-android-sdk-release.aar'] = pin('choco-android-sdk-release.aar');
   const packages = Object.fromEntries(['runtime', 'react', 'react-native'].map(name => {
-    const { version, file, sha256 } = receipt.packages[`@chocopie/${name}`];
-    return [`@chocopie/${name}`, { version, file, sha256 }];
+    const { version, file, sha256 } = receipt.packages[`@chocopie-moments/${name}`];
+    return [`@chocopie-moments/${name}`, { version, file, sha256 }];
   }));
   writeFileSync(join(release, 'catalog.json'), JSON.stringify({ source, format: 0, semantics: 1, packages }));
   receipt.catalog = pin('catalog.json');

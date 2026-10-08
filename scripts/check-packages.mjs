@@ -15,10 +15,10 @@ try {
   const development = JSON.parse(readFileSync('package.json', 'utf8')).devDependencies;
   // A runtime-only consumer must resolve public declarations without codec/CLI
   // dependencies or skipLibCheck hiding missing type imports.
-  const runtime = resolve('release', receipt.packages['@chocopie/runtime'].file);
+  const runtime = resolve('release', receipt.packages['@chocopie-moments/runtime'].file);
   execFileSync('npm', ['install', '--offline', '--ignore-scripts', '--no-audit', '--no-fund', runtime], {cwd:directory, stdio:'inherit'});
   writeFileSync(join(directory, 'consumer.ts'), `
-    import { loadChoco } from '@chocopie/runtime';
+    import { loadChoco } from '@chocopie-moments/runtime';
     const asset = await loadChoco(new Uint8Array());
     const name: string = asset.manifest.name;
     const frames = asset.frames({ width: 100, height: 100 });
@@ -29,8 +29,8 @@ try {
   execFileSync('npm', ['install','--offline','--ignore-scripts','--no-audit','--no-fund',...tarballs, `react@${development.react}`, `react-dom@${development['react-dom']}`], { cwd: directory, stdio:'inherit' });
   writeFileSync(join(directory, 'verify.mjs'), `
     import { readFileSync } from 'node:fs';
-    import { decodeChoco, encodeChoco } from '@chocopie/codec';
-    import initialize from '@chocopie/runtime/core';
+    import { decodeChoco, encodeChoco } from '@chocopie-moments/codec';
+    import initialize from '@chocopie-moments/runtime/core';
     const bytes = readFileSync(process.argv[2]);
     const decoded = await decodeChoco(bytes);
     if (!Buffer.from(await encodeChoco(decoded.document)).equals(bytes)) throw Error('Codec round-trip differs');
@@ -49,14 +49,14 @@ try {
   execFileSync('node', ['verify.mjs', resolve('fixtures/ambient.sway.choco')], { cwd:directory, stdio:'inherit' });
   execFileSync('node', ['verify.mjs', resolve('fixtures/admission/kind.waiting.choco')], { cwd:directory, stdio:'inherit' });
   execFileSync('node', ['verify.mjs', resolve('fixtures/admission/kind.custom.choco')], { cwd:directory, stdio:'inherit' });
-  execFileSync('node', [join(directory,'node_modules/@chocopie/cli/dist/index.js'),'inspect',resolve('fixtures/ambient.sway.choco'),'--json'], { cwd:directory, stdio:'inherit' });
+  execFileSync('node', [join(directory,'node_modules/@chocopie-moments/cli/dist/index.js'),'inspect',resolve('fixtures/ambient.sway.choco'),'--json'], { cwd:directory, stdio:'inherit' });
   writeFileSync(join(directory, 'public-api.mjs'), `
     import assert from 'node:assert/strict';
     import { readFileSync } from 'node:fs';
-    import { loadChoco } from '@chocopie/runtime';
+    import { loadChoco } from '@chocopie-moments/runtime';
     import { createElement } from 'react';
     import { renderToString } from 'react-dom/server';
-    import { Choco } from '@chocopie/react';
+    import { Choco } from '@chocopie-moments/react';
     globalThis.fetch = () => { throw Error('Offline playback must not fetch a service'); };
     const bytes = readFileSync(process.argv[2]);
     const asset = await loadChoco(bytes);

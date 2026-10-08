@@ -2,8 +2,8 @@
 
 import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import type { CSSProperties, ReactNode } from 'react';
-import { loadChoco } from '@chocopie/runtime';
-import type { ChocoAsset, ChocoPalette, ChocoPlayer, ChocoTrigger } from '@chocopie/runtime';
+import { loadChoco } from '@chocopie-moments/runtime';
+import type { ChocoAsset, ChocoPalette, ChocoPlayer, ChocoTrigger } from '@chocopie-moments/runtime';
 
 export type ChocoProps = {
   readonly src: Parameters<typeof loadChoco>[0];

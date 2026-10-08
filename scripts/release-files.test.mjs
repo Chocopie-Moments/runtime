@@ -9,7 +9,7 @@ function setup(t) {
   const directory = mkdtempSync(join(tmpdir(), 'choco-release-allowlist-'));
   t.after(() => rmSync(directory, { recursive: true, force: true }));
   const packages = Object.fromEntries(['codec', 'runtime', 'react', 'cli', 'react-native'].map(name =>
-    [`@chocopie/${name}`, { file: `${name}.tgz`, version }]));
+    [`@chocopie-moments/${name}`, { file: `${name}.tgz`, version }]));
   const receipt = { packages, catalog: { file: 'catalog.json' }, native: { 'choco-android-sdk-release.aar': {} } };
   for (const name of [...Object.values(packages).map(pin => pin.file), 'catalog.json', 'artifacts.json', 'choco-android-sdk-release.aar'])
     writeFileSync(join(directory, name), 'reviewed');
@@ -31,9 +31,9 @@ test('rejects directory attachments before publication can start', t => {
 });
 test('rejects escaping package paths and unreviewed native attachments', t => {
   const { directory, receipt } = setup(t);
-  receipt.packages['@chocopie/runtime'].file = '../outside.tgz';
+  receipt.packages['@chocopie-moments/runtime'].file = '../outside.tgz';
   assert.throws(() => reviewedReleaseFiles(directory, receipt, version), /safe flat filenames/);
-  receipt.packages['@chocopie/runtime'].file = 'runtime.tgz';
+  receipt.packages['@chocopie-moments/runtime'].file = 'runtime.tgz';
   receipt.native['proof.apk'] = {};
   assert.throws(() => reviewedReleaseFiles(directory, receipt, version), /Unexpected native/);
 });

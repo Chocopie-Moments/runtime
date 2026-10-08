@@ -23,7 +23,7 @@ async function consumer() {
   const native = bytes('hashed-native-package');
   write(root, 'native.tgz', native);
   write(root, 'catalog.json', bytes(JSON.stringify({ version: 1, format: 0, semantics: 1, capabilities: [], packages: {
-    '@chocopie/react-native': { version: '0.1.0-dev.0', file: 'native.tgz', sha256: digest(native) },
+    '@chocopie-moments/react-native': { version: '0.1.0-dev.0', file: 'native.tgz', sha256: digest(native) },
   } })));
   const document = validateChocoDocument({ name: 'Still', kind: 'success', palette: { accent: '#ff0000', secondary: '#00ff00', ink: '#000000', background: '#ffffff' },
     scene: { viewBox: [0, 0, 32, 32], root: { transform: [1, 0, 0, 1, 0, 0], opacity: 1, displayed: true, visible: true, children: [] } },
@@ -45,7 +45,7 @@ describe('native installation planning', () => {
     apply(app.root, plan.changes, () => {});
     expect(read(app.root, 'assets/choco/moment.choco')).toEqual(Buffer.from(app.asset));
     const installed = receipt(app.root);
-    expect(Object.keys(installed.dependencies)).toEqual(['@chocopie/react-native']);
+    expect(Object.keys(installed.dependencies)).toEqual(['@chocopie-moments/react-native']);
     expect(installed.installations[0].target).toBe('react-native');
     const generated = read(app.root, 'src/choco/moment.tsx')!.toString();
     expect(generated).toContain("require('../../assets/choco/moment.choco')");

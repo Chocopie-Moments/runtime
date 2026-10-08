@@ -8,7 +8,7 @@ const catalogSchema = z.object({
   version: z.literal(1), format: z.number().int(), semantics: z.number().int(),
   source: z.string().regex(/^[a-f0-9]{40}$/).optional(),
   capabilities: z.array(z.object({ id: z.string(), version: z.number().int().positive() }).strict()),
-  packages: z.object({ '@chocopie/runtime': artifact.optional(), '@chocopie/react': artifact.optional(), '@chocopie/react-native': artifact.optional() }).strict(),
+  packages: z.object({ '@chocopie-moments/runtime': artifact.optional(), '@chocopie-moments/react': artifact.optional(), '@chocopie-moments/react-native': artifact.optional() }).strict(),
 }).strict();
 export type Requirements = { formatVersion: number; semanticsVersion: number; required: readonly { id: string; version: number }[] };
 

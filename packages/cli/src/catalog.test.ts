@@ -9,7 +9,7 @@ describe('pinned remote release catalog', () => {
     const artifact = bytes('reviewed packed native artifact');
     const source = 'a'.repeat(40);
     const content = bytes(JSON.stringify({ version: 1, source, format: 0, semantics: 1, capabilities: [], packages: {
-      '@chocopie/react-native': { version: '0.1.0-dev.0', file: './native.tgz', sha256: digest(artifact) },
+      '@chocopie-moments/react-native': { version: '0.1.0-dev.0', file: './native.tgz', sha256: digest(artifact) },
     } }));
     const requested: string[] = [];
     vi.stubGlobal('fetch', async (url: string) => { requested.push(url); return new Response(url.endsWith('release.json') ? content : artifact); });

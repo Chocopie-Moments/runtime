@@ -1,12 +1,12 @@
 {
-  "name": "@chocopie/react",
+  "name": "@chocopie-moments/react",
   "version": "0.1.0",
   "type": "module",
   "license": "Apache-2.0",
   "sideEffects": false,
   "files": ["dist", "LICENSE", "NOTICE"],
   "exports": {".": {"types": "./dist/index.d.ts", "import": "./dist/index.js"}},
-  "dependencies": {"@chocopie/runtime": "0.1.0"},
+  "dependencies": {"@chocopie-moments/runtime": "0.1.0"},
   "peerDependencies": {"react": ">=18.0.0 <20"},
   "repository": {"type": "git", "url": "https://github.com/Chocopie-Moments/runtime.git", "directory": "packages/react"}
 }

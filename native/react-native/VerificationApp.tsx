@@ -1,6 +1,6 @@
 import React, {useRef, useState} from 'react';
 import {Button, ScrollView, StyleSheet, Text, View} from 'react-native';
-import {Choco, type ChocoHandle} from '@chocopie/react-native';
+import {Choco, type ChocoHandle} from '@chocopie-moments/react-native';
 
 // Only redistributable shared-runtime fixtures belong in this proof app.
 const fixtures = {

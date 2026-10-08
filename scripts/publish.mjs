@@ -20,7 +20,7 @@ for(const artifact of artifacts) {
 }
 const catalog=JSON.parse(readFileSync(resolve(directory,receipt.catalog.file),'utf8'));
 if(catalog.source!==receipt.source || catalog.format!==receipt.releaseGates.format || catalog.semantics!==receipt.releaseGates.semantics) throw Error('Catalog source differs from the reviewed artifacts.');
-for(const name of ['@chocopie/runtime','@chocopie/react','@chocopie/react-native']) {
+for(const name of ['@chocopie-moments/runtime','@chocopie-moments/react','@chocopie-moments/react-native']) {
  const entry=catalog.packages[name], expected=receipt.packages[name];
  if(!entry || !expected || ['version','file','sha256'].some(key=>entry[key]!==expected[key])) throw Error('Catalog package pin differs: '+name);
 }

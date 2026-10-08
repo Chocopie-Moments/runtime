@@ -57,7 +57,7 @@ for path in [binary, release / 'Package.swift', release / 'SWIFT-PACKAGE.json']:
     receipt['native'][path.name] = digest(path)
 
 receipt['nativePlatforms'] = rn['platforms']
-receipt['packages']['@chocopie/react-native'] = {
+receipt['packages']['@chocopie-moments/react-native'] = {
     'version': json.loads(pathlib.Path('packages/react-native/package.json').read_text())['version'],
     'file': tarball.name, **digest(release / tarball.name),
 }
@@ -80,8 +80,8 @@ for path in [aar, android / 'SDK-BUILD.json']:
 shutil.rmtree(android)
 catalog = json.loads((release / 'catalog.json').read_text())
 assert catalog['source'] == source
-catalog['packages']['@chocopie/react-native'] = {
-    key: receipt['packages']['@chocopie/react-native'][key] for key in ['version', 'file', 'sha256']
+catalog['packages']['@chocopie-moments/react-native'] = {
+    key: receipt['packages']['@chocopie-moments/react-native'][key] for key in ['version', 'file', 'sha256']
 }
 (release / 'catalog.json').write_text(json.dumps(catalog, indent=2) + '\n')
 receipt['catalog'] = {'file': 'catalog.json', **digest(release / 'catalog.json')}

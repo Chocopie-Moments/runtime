@@ -20,9 +20,9 @@ const npm = (args, cwd) => execFileSync('npm', args, { cwd, stdio: 'pipe' });
 try {
   for (const target of ['web', 'react']) {
     const app = mkdtempSync(join(temporary, `${target}-`));
-    const cliFile = join(release, artifacts['@chocopie/cli'].file);
+    const cliFile = join(release, artifacts['@chocopie-moments/cli'].file);
     const reactVersion = JSON.parse(readFileSync(join(repository, 'node_modules/react/package.json'), 'utf8')).version;
-    const dependencies = { '@chocopie/cli': `file:${cliFile}`,
+    const dependencies = { '@chocopie-moments/cli': `file:${cliFile}`,
       ...(target === 'react' ? { react: reactVersion, 'react-dom': reactVersion } : {}) };
     const devDependencies = target === 'react' ? Object.fromEntries(['@types/react', '@types/react-dom'].map(name =>
       [name, JSON.parse(readFileSync(join(repository, 'node_modules', name, 'package.json'), 'utf8')).version])) : {};
@@ -30,7 +30,7 @@ try {
     npm(['install', '--offline', '--ignore-scripts', '--no-audit', '--no-fund'], app);
     const command = (args, ok = true) => {
       let output;
-      try { output = execFileSync(process.execPath, [join(app, 'node_modules/@chocopie/cli/dist/index.js'), ...args, '--json'], { cwd: app, encoding: 'utf8' }); }
+      try { output = execFileSync(process.execPath, [join(app, 'node_modules/@chocopie-moments/cli/dist/index.js'), ...args, '--json'], { cwd: app, encoding: 'utf8' }); }
       catch (error) { if (ok) throw error; output = error.stdout; }
       const result = JSON.parse(output);
       assert.equal(result.ok, ok, JSON.stringify(result));
@@ -39,7 +39,7 @@ try {
     const inspected = command(['inspect', fixture]).result;
     const next = command(['inspect', updated]).result;
     const catalog = join(app, 'release.json');
-    const packages = Object.fromEntries(['@chocopie/runtime', '@chocopie/react'].map(name => {
+    const packages = Object.fromEntries(['@chocopie-moments/runtime', '@chocopie-moments/react'].map(name => {
       const artifact = artifacts[name], file = join(release, artifact.file);
       assert.equal(hash(readFileSync(file)), artifact.sha256);
       return [name, { version: artifact.version, file, sha256: artifact.sha256 }];
@@ -58,7 +58,7 @@ try {
     const receipt = JSON.parse(readFileSync(join(app, '.choco/installations.json')));
     assert.equal(receipt.installations[0].target, target);
     assert.equal(receipt.installations[0].sha256, hash(readFileSync(fixture)));
-    assert.equal(Object.keys(receipt.dependencies).includes('@chocopie/react'), target === 'react');
+    assert.equal(Object.keys(receipt.dependencies).includes('@chocopie-moments/react'), target === 'react');
     const unchanged = command(['add', fixture, ...args, '--yes', '--offline']).result;
     assert.deepEqual(unchanged.changed, []);
 
@@ -90,8 +90,8 @@ try {
     assert.equal(existsSync(wrapper), false);
     assert.equal(existsSync(join(app, 'assets/choco/moment.choco')), false);
     const final = JSON.parse(readFileSync(join(app, 'package.json')));
-    assert.equal(final.dependencies['@chocopie/runtime'], undefined);
-    assert.equal(final.dependencies['@chocopie/react'], undefined);
+    assert.equal(final.dependencies['@chocopie-moments/runtime'], undefined);
+    assert.equal(final.dependencies['@chocopie-moments/react'], undefined);
     assert.equal(command(['doctor', '--project', app]).result.healthy, true);
     console.log(`Packed CLI ${target}: dry-run, install, generated imports${target === 'react' ? '/SSR' : ''}, update, conflict preservation and removal passed.`);
   }

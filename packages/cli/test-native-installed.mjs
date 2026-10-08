@@ -14,7 +14,7 @@ assert(['bare', 'expo'].includes(profile), 'Use bare or expo consumer profile.')
 const expo = profile === 'expo';
 const release = resolve(process.argv[2] ?? join(repository, 'release'));
 const artifacts = JSON.parse(readFileSync(join(release, 'artifacts.json'), 'utf8')).packages;
-const native = artifacts['@chocopie/react-native'];
+const native = artifacts['@chocopie-moments/react-native'];
 assert(native, 'Stage the reviewed native tarball before running the native installer proof.');
 const hash = data => createHash('sha256').update(data).digest('hex');
 const root = mkdtempSync(join(tmpdir(), 'choco-installed-native-cli-'));
@@ -23,7 +23,7 @@ const fixture = join(repository, 'fixtures/ambient.float.choco');
 const next = join(repository, 'fixtures/ambient.bob.choco');
 try {
   writeFileSync(join(root, 'package.json'), JSON.stringify({ name: 'packed-native-installer-proof', private: true,
-    dependencies: { react: '19.2.3', 'react-native': expo ? '0.86.3' : '0.87.1', ...(expo ? { expo: '57.0.17' } : {}), '@chocopie/cli': `file:${join(release, artifacts['@chocopie/cli'].file)}` },
+    dependencies: { react: '19.2.3', 'react-native': expo ? '0.86.3' : '0.87.1', ...(expo ? { expo: '57.0.17' } : {}), '@chocopie-moments/cli': `file:${join(release, artifacts['@chocopie-moments/cli'].file)}` },
     devDependencies: { '@types/react': '19.2.18', ...(expo ? {} : { '@react-native/metro-config': '0.87.1' }) },
   }, null, 2));
   npm();
@@ -32,7 +32,7 @@ try {
   writeFileSync(join(root, 'metro.config.js'), metroBefore);
   const command = (args, ok = true) => {
     let result;
-    try { result = execFileSync(process.execPath, [join(root, 'node_modules/@chocopie/cli/dist/index.js'), ...args, '--json'], { cwd: root, encoding: 'utf8' }); }
+    try { result = execFileSync(process.execPath, [join(root, 'node_modules/@chocopie-moments/cli/dist/index.js'), ...args, '--json'], { cwd: root, encoding: 'utf8' }); }
     catch (error) { if (ok) throw error; result = error.stdout; }
     const parsed = JSON.parse(result); assert.equal(parsed.ok, ok, JSON.stringify(parsed)); return parsed;
   };
@@ -42,7 +42,7 @@ try {
   const catalog = join(root, 'release.json');
   writeFileSync(catalog, JSON.stringify({ version: 1, format: manifests[0].formatVersion, semantics: manifests[0].semanticsVersion,
     capabilities: [...new Map(manifests.flatMap(manifest => manifest.required).map(item => [item.id, item])).values()],
-    packages: { '@chocopie/react-native': { version: native.version, file: packageFile, sha256: native.sha256 } },
+    packages: { '@chocopie-moments/react-native': { version: native.version, file: packageFile, sha256: native.sha256 } },
   }));
   const args = ['--project', root, '--name', 'moment', '--catalog', catalog, '--offline'];
   assert.equal(command(['add', fixture, '--sha256', hash(readFileSync(fixture)), ...args, '--dry-run']).result.applied, false);
@@ -51,7 +51,7 @@ try {
   assert.equal(hash(readFileSync(join(root, 'assets/choco/moment.choco'))), hash(readFileSync(fixture)));
   assert.equal(command(['doctor', '--project', root]).result.healthy, true);
   const installed = JSON.parse(readFileSync(join(root, '.choco/installations.json')));
-  assert.deepEqual(Object.keys(installed.dependencies), ['@chocopie/react-native']);
+  assert.deepEqual(Object.keys(installed.dependencies), ['@chocopie-moments/react-native']);
   const require = createRequire(join(root, 'package.json'));
   const config = require('./metro.config.js');
   assert(config.resolver.assetExts.includes('choco'));
@@ -71,6 +71,6 @@ try {
   command(['remove', ...args, '--yes']);
   assert.equal(readFileSync(join(root, 'metro.config.js'), 'utf8'), metroBefore);
   assert.equal(existsSync(wrapper), false);
-  assert.equal(JSON.parse(readFileSync(join(root, 'package.json'))).dependencies['@chocopie/react-native'], undefined);
+  assert.equal(JSON.parse(readFileSync(join(root, 'package.json'))).dependencies['@chocopie-moments/react-native'], undefined);
   console.log(`Packed ${profile} native CLI consumer: exact asset/pins, Metro preservation, generated application types, update/conflicts/removal passed. Native execution was not exercised.`);
 } finally { rmSync(root, { recursive: true, force: true }); }

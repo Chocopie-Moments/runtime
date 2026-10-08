@@ -70,7 +70,7 @@ def digest(p): return {'bytes':p.stat().st_size,'sha256':hashlib.sha256(p.read_b
 record={'source':subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip(),
  'consumer':str(consumer),'app':str(app),'configuration':'Release','profile':profile,'buildJobs':int(jobs),'nativePackage':{'path':str(tarball),**digest(tarball)},
  'reactNative':json.loads((consumer/'node_modules/react-native/package.json').read_text())['version'],
- 'nativePeerDependencies':json.loads((consumer/'node_modules/@chocopie/react-native/package.json').read_text())['peerDependencies'],
+ 'nativePeerDependencies':json.loads((consumer/'node_modules/@chocopie-moments/react-native/package.json').read_text())['peerDependencies'],
  'peerDependencyOverride':profile=='expo' and peer_override=='1',
  'files':{str(p.relative_to(app)):digest(p) for p in app.rglob('*') if p.is_file()},
  'dependencyArtifacts':{str(p.relative_to(consumer)):digest(p) for p in (consumer/'ios/Pods').glob('*-artifacts/*-release.tar.gz')},

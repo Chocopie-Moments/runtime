@@ -16,7 +16,7 @@ const receipt = JSON.parse(readFileSync(join(release, 'artifacts.json'), 'utf8')
 const source = execFileSync('git', ['rev-parse', 'HEAD'], { cwd: repository, encoding: 'utf8' }).trim();
 assert.equal(receipt.source, source, 'Browser proof must use the exact artifact source revision');
 assert.equal(receipt.dirty, false, 'Browser proof requires clean reviewed artifacts');
-const pin = receipt.packages['@chocopie/runtime'];
+const pin = receipt.packages['@chocopie-moments/runtime'];
 assert.match(pin.file, /^[a-zA-Z0-9_.-]+\.tgz$/);
 const tarball = join(release, pin.file);
 const bytes = readFileSync(tarball);
@@ -51,7 +51,7 @@ function contained(root, suffix) {
 try {
   writeFileSync(join(consumer, 'package.json'), JSON.stringify({ private: true, type: 'module' }));
   execFileSync('npm', ['install', '--ignore-scripts', '--no-audit', '--no-fund', tarball], { cwd: consumer, stdio: 'inherit' });
-  const packed = join(consumer, 'node_modules/@chocopie/runtime/dist');
+  const packed = join(consumer, 'node_modules/@chocopie-moments/runtime/dist');
   server = createServer((request, response) => {
     try {
       if (request.method !== 'GET') { response.writeHead(405); response.end(); return; }

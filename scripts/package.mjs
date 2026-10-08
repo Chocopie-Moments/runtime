@@ -43,7 +43,7 @@ for (const name of ['choco.mjs','choco.wasm','build.json']) copyFileSync(`script
 cpSync('third-party', 'packages/runtime/dist/third-party', { recursive: true });
 const runtime = await build({ entryPoints: ['packages/runtime/src/index.ts'], outfile: 'packages/runtime/dist/index.js', bundle: true, minify: true, metafile: true, format: 'esm', platform: 'browser', target: 'es2022', external: ['./choco.mjs'] });
 notices('runtime', runtime.metafile);
-await build({ entryPoints: ['packages/react/src/index.tsx'], outfile: 'packages/react/dist/index.js', bundle: true, minify: true, format: 'esm', platform: 'neutral', target: 'es2022', external: ['react', 'react/jsx-runtime', '@chocopie/runtime'], banner: { js: "'use client';" } });
+await build({ entryPoints: ['packages/react/src/index.tsx'], outfile: 'packages/react/dist/index.js', bundle: true, minify: true, format: 'esm', platform: 'neutral', target: 'es2022', external: ['react', 'react/jsx-runtime', '@chocopie-moments/runtime'], banner: { js: "'use client';" } });
 for (const name of ['runtime', 'react']) {
   execFileSync('npx', ['tsc', '-p', `tsconfig.${name}.json`], { stdio: 'inherit' });
   writeFileSync(`packages/${name}/dist/index.d.ts`, `export * from './types/packages/${name}/src/index.js';\n`);
@@ -58,7 +58,7 @@ for (const name of ['codec','runtime','react','cli']) {
 const source = execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim();
 writeFileSync(`${release}/artifacts.json`, JSON.stringify({ source, dirty: !!execFileSync('git', ['status','--porcelain'], {encoding:'utf8'}).trim(), packages, releaseGates: JSON.parse(readFileSync('release-gates.json','utf8')) }, null, 2)+'\n');
 const { CHOCO_CAPABILITIES, CHOCO_FORMAT_VERSION, CHOCO_SEMANTICS_VERSION } = await import('../packages/codec/dist/index.js');
-const catalogPackages = Object.fromEntries(['@chocopie/runtime','@chocopie/react'].map(name => {
+const catalogPackages = Object.fromEntries(['@chocopie-moments/runtime','@chocopie-moments/react'].map(name => {
   const { version, file, sha256 } = packages[name];
   return [name, { version, file, sha256 }];
 }));

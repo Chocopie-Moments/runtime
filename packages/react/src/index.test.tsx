@@ -5,10 +5,10 @@ import { renderToString } from 'react-dom/server';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Choco } from './index.tsx';
 import type { ChocoHandle } from './index.tsx';
-import type { ChocoAsset, ChocoMountOptions, ChocoPlayer } from '@chocopie/runtime';
+import type { ChocoAsset, ChocoMountOptions, ChocoPlayer } from '@chocopie-moments/runtime';
 
 const { load } = vi.hoisted(() => ({ load: vi.fn() }));
-vi.mock('@chocopie/runtime', () => ({ loadChoco: load }));
+vi.mock('@chocopie-moments/runtime', () => ({ loadChoco: load }));
 
 const palette = { ink: '#000000', secondary: '#ffffff', accent: '#ff0000', background: '#ffffff' };
 function asset() {

@@ -3,7 +3,7 @@ import { lstatSync, realpathSync } from 'node:fs';
 
 /** Admit every release attachment before the first publication write. */
 export function reviewedReleaseFiles(directory, receipt, version) {
-  const expectedPackages = ['@chocopie/codec', '@chocopie/runtime', '@chocopie/react', '@chocopie/cli', '@chocopie/react-native'];
+  const expectedPackages = ['@chocopie-moments/codec', '@chocopie-moments/runtime', '@chocopie-moments/react', '@chocopie-moments/cli', '@chocopie-moments/react-native'];
   if (Object.keys(receipt.packages).sort().join(',') !== expectedPackages.sort().join(','))
     throw new Error('The reviewed package family is incomplete or contains an unexpected package.');
   const nativeNames = new Set(['choco-ios-development.zip', 'choco-android-sdk-release.aar', 'SDK-BUILD.json',

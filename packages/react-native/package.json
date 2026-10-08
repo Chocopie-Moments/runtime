@@ -1,5 +1,5 @@
 {
-  "name": "@chocopie/react-native",
+  "name": "@chocopie-moments/react-native",
   "version": "0.1.0",
   "license": "Apache-2.0",
   "main": "src/index.tsx",

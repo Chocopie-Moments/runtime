@@ -6,7 +6,7 @@ export default defineConfig({
   test: { exclude: [...configDefaults.exclude, 'scripts/**/*.test.mjs'] },
   resolve: {
     alias: {
-      '@chocopie/runtime': fileURLToPath(new URL('./packages/runtime/src/index.ts', import.meta.url)),
+      '@chocopie-moments/runtime': fileURLToPath(new URL('./packages/runtime/src/index.ts', import.meta.url)),
     },
   },
 });

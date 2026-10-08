@@ -51,8 +51,8 @@ export async function planAdd(app: ReturnType<typeof project>, name: string, ass
   const decoded = await decodeChoco(asset);
   const requirements = await installedAssets(app.root, installed);
   const release = await catalog(releaseFile, catalogOptions);
-  const requiredPackages = new Set(installed.installations.filter(item => item.name !== name).flatMap(item => item.target === 'react-native' ? ['@chocopie/react-native'] : item.target === 'react' ? ['@chocopie/runtime', '@chocopie/react'] : ['@chocopie/runtime']));
-  for (const dependency of app.target === 'react-native' ? ['@chocopie/react-native'] : app.target === 'react' ? ['@chocopie/runtime', '@chocopie/react'] : ['@chocopie/runtime']) requiredPackages.add(dependency);
+  const requiredPackages = new Set(installed.installations.filter(item => item.name !== name).flatMap(item => item.target === 'react-native' ? ['@chocopie-moments/react-native'] : item.target === 'react' ? ['@chocopie-moments/runtime', '@chocopie-moments/react'] : ['@chocopie-moments/runtime']));
+  for (const dependency of app.target === 'react-native' ? ['@chocopie-moments/react-native'] : app.target === 'react' ? ['@chocopie-moments/runtime', '@chocopie-moments/react'] : ['@chocopie-moments/runtime']) requiredPackages.add(dependency);
   for (const dependency of requiredPackages) if (!release.packages.some(pkg => pkg.name === dependency))
     throw new CliError('catalog', `The release catalog is missing ${dependency}. Supply the complete tested package artifacts.`);
   compatible(release, [...requirements.filter((_, index) => installed.installations[index].name !== name), decoded.manifest]);
@@ -113,7 +113,7 @@ export function planRemove(app: ReturnType<typeof project>, name: string): Plan 
     } else preserved.push(installed.metro.path);
   }
   for (const [name, dependency] of Object.entries(installed.dependencies)) {
-    const needed = installed.installations.some(entry => name === '@chocopie/react-native' ? entry.target === 'react-native' : name === '@chocopie/react' ? entry.target === 'react' : entry.target !== 'react-native');
+    const needed = installed.installations.some(entry => name === '@chocopie-moments/react-native' ? entry.target === 'react-native' : name === '@chocopie-moments/react' ? entry.target === 'react' : entry.target !== 'react-native');
     if (needed) continue;
     if (app.manifest.dependencies?.[name] !== dependency.value || preserved.length > 0) { preserved.push(`dependency:${name}`); continue; }
     if (dependency.previous === null) delete app.manifest.dependencies[name]; else app.manifest.dependencies[name] = dependency.previous;

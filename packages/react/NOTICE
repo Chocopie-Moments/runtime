@@ -1,5 +1,5 @@
 Chocopie React adapter
 Copyright 2026 Chocopie contributors
 
-This adapter consumes @chocopie/runtime; renderer and dependency notices are
+This adapter consumes @chocopie-moments/runtime; renderer and dependency notices are
 distributed with that package.
