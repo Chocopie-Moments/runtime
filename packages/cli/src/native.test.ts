@@ -35,10 +35,29 @@ async function consumer() {
   const catalog = JSON.parse(read(root, 'catalog.json')!.toString());
   catalog.capabilities = (await decodeChoco(asset)).manifest.required;
   write(root, 'catalog.json', bytes(JSON.stringify(catalog)));
-  return { root, original, asset, catalog: join(root, 'catalog.json') };
+  return { root, original, asset, document, catalog: join(root, 'catalog.json') };
 }
 
 describe('native installation planning', () => {
+  it.each(['web', 'react', 'react-native'] as const)('generates only named states for %s, preserving event triggers in the asset', async target => {
+    const app = await consumer();
+    if (target !== 'react-native') write(app.root, 'package.json', bytes(JSON.stringify({ name: 'consumer', dependencies: target === 'react' ? { react: '19.2.3' } : {} })));
+    const document = validateChocoDocument({ ...app.document, motion: { ...app.document.motion, score: {
+      enter: { beats: [{ do: 'pulse', dur: 0.1 }] }, hover: { beats: [{ do: 'pulse', dur: 0.1 }] }, click: { beats: [{ do: 'pulse', dur: 0.1 }] }, states: { active: {} },
+    } } });
+    const asset = await encodeChoco(document);
+    const { decodeChoco } = await import('../../../src/codec/codec.ts');
+    const decoded = await decodeChoco(asset);
+    expect(decoded.manifest.states).toEqual(['active', 'click', 'enter', 'hover', 'idle']);
+    const catalog = JSON.parse(read(app.root, 'catalog.json')!.toString());
+    catalog.capabilities = decoded.manifest.required;
+    for (const name of ['@chocopie-moments/runtime', '@chocopie-moments/react']) catalog.packages[name] = catalog.packages['@chocopie-moments/react-native'];
+    write(app.root, 'catalog.json', bytes(JSON.stringify(catalog)));
+    const plan = await planAdd(project(app.root), 'moment', asset, app.catalog, false);
+    const wrapper = plan.changes.find(change => change.path.startsWith('src/choco/'))!.after!.toString();
+    expect(wrapper).toContain('export type ChocoState = "active" | "idle";');
+    expect(plan.changes.find(change => change.path.endsWith('.choco'))!.after).toEqual(Buffer.from(asset));
+  });
   it('copies exact assets, pins native only, preserves Metro settings, and restores them on removal', async () => {
     const app = await consumer();
     const plan = await planAdd(project(app.root), 'moment', app.asset, app.catalog, false);
