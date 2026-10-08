@@ -1,0 +1,16 @@
+Isolated Android proof scaffold
+
+Copied from @react-native-community/template 0.87.1, used with React Native
+0.87.1 and Community CLI 20.2.0. The original template MIT license is retained
+in LICENSE. Exact npm package provenance:
+https://registry.npmjs.org/@react-native-community/template/0.87.1
+sha512-BScXP5sUoCCb4piD8EBIcxsxstfY5ME/hZ1K9mMDScfUnjQxiIWwEskIgkWfzRPuXwhMEWwREbgmaswLZqfa6A==
+
+The copied Windows Gradle launcher retains its Meta Platforms copyright and
+MIT reference. ReactNative-LICENSE preserves that MIT notice verbatim from
+the installed react-native 0.87.1 package. Original file headers remain in
+place. The Gradle launchers also retain their Apache-2.0 headers, and the
+wrapper JAR includes its license under META-INF/LICENSE.
+
+These notices cover the copied upstream scaffold and launcher contributions;
+they do not change the license of Chocopie code or downloaded dependencies.

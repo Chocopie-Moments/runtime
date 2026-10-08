@@ -1,0 +1,26 @@
+{
+  "name": "@chocopie/codec",
+  "version": "0.1.0-dev.0",
+  "private": true,
+  "type": "module",
+  "license": "Apache-2.0",
+  "files": [
+    "dist",
+    "LICENSE",
+    "NOTICE"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Chocopie-Moments/runtime.git",
+    "directory": "packages/codec"
+  },
+  "dependencies": {
+    "zod": "4.5.4"
+  }
+}

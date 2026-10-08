@@ -1,0 +1,40 @@
+{
+  "name": "chocopie-runtime-workspace",
+  "private": true,
+  "type": "module",
+  "version": "0.1.0-dev.0",
+  "engines": {
+    "node": ">=24"
+  },
+  "workspaces": [
+    "packages/codec",
+    "packages/runtime",
+    "packages/cli",
+    "packages/react"
+  ],
+  "scripts": {
+    "check:spec": "tsx scripts/choco/write-spec.ts --check",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "build": "node scripts/package.mjs",
+    "check:packages": "node scripts/check-packages.mjs"
+  },
+  "dependencies": {
+    "fflate": "0.8.3",
+    "pako": "2.2.0",
+    "zod": "4.5.4"
+  },
+  "devDependencies": {
+    "@types/node": "26.4.1",
+    "ajv": "8.20.0",
+    "esbuild": "0.28.2",
+    "tsx": "4.23.13",
+    "typescript": "7.0.2",
+    "vitest": "4.1.11",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "@types/react": "19.2.18",
+    "@types/react-dom": "19.2.7",
+    "jsdom": "26.1.0"
+  }
+}

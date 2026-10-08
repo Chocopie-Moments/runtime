@@ -1,0 +1,23 @@
+[
+  {
+    "file": "src/renderer/cpu_engine/tvgSwFill.cpp",
+    "original": "b7dba6803735e27db0df8fb2cd34d33a624c9bda8470e75ad0c7bad4fe6d3013",
+    "patched": "67ea5b41ed043e0da3fc0fe6795e5a6e770b2c260458bd637a13c58c5dfa601d",
+    "patch": "8a6153bb12c8e80ec18c85916876b8ec555a7d1e158d7464e3ce818fca7a22fc",
+    "name": "repeat-boundaries.patch"
+  },
+  {
+    "name": "empty-stroke-fill.patch",
+    "file": "src/renderer/cpu_engine/tvgSwRenderer.cpp",
+    "original": "8efb33ce20a2919d51023049aaaae1f5a350240d93241a35574719995b03cae2",
+    "patched": "2108ec80f18931e87278b85b99c361f870a2036649474c09ca253ef8f4a0309a",
+    "patch": "21180d43559209751491b7ce63e013e5163ac6dbdb4ff2f3356d93c34f105ae4"
+  },
+  {
+    "name": "neon-alpha-rounding.patch",
+    "file": "src/renderer/cpu_engine/tvgSwRasterNeon.h",
+    "original": "f7d046e8744e85222d74675a18f50247dc4e7253b143089022d3e730a4898be0",
+    "patched": "553bc1d970541a986a159fe6e585608801580b2f9bf39d004454d086a3498a3d",
+    "patch": "100c5f55ca72d168a1aa34e5c2e2b4ae202ac64c9f838ae1ac7c377671d32180"
+  }
+]

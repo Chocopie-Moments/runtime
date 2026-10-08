@@ -1,0 +1,34 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "strict": true,
+    "skipLibCheck": true,
+    "allowImportingTsExtensions": true,
+    "noEmit": true,
+    "lib": [
+      "ES2022",
+      "DOM",
+      "DOM.Iterable"
+    ],
+    "types": [
+      "node"
+    ],
+    "jsx": "react-jsx",
+    "paths": {
+      "@chocopie/runtime": [
+        "./packages/runtime/src/index.ts"
+      ]
+    }
+  },
+  "include": [
+    "src/**/*.ts",
+    "packages/codec/src/**/*.ts",
+    "packages/cli/src/**/*.ts",
+    "tests/**/*.ts",
+    "packages/runtime/src/**/*.ts",
+    "packages/react/src/**/*.ts",
+    "packages/react/src/**/*.tsx"
+  ]
+}

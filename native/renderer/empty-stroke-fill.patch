@@ -1,0 +1,22 @@
+diff --git a/src/renderer/cpu_engine/tvgSwRenderer.cpp b/src/renderer/cpu_engine/tvgSwRenderer.cpp
+index 76bcf51..de43663 100644
+--- a/src/renderer/cpu_engine/tvgSwRenderer.cpp
++++ b/src/renderer/cpu_engine/tvgSwRenderer.cpp
+@@ -152,7 +152,16 @@ struct SwShapeTask : SwTask
+         //Stroke
+         if (strokeWidth > 0.0f) {
+             auto updateStroke = updateShape || (flags[0] & RenderUpdateFlag::Stroke);
+-            if (updateStroke && !shapeGenStrokeRle(shape, rshape, transform, clipBox, curBox, renderer->mpool, tid, renderer->antiAlias)) goto dismiss;
++            if (updateStroke) {
++                RenderRegion strokeBox;
++                if (!shapeGenStrokeRle(shape, rshape, transform, clipBox, strokeBox, renderer->mpool, tid, renderer->antiAlias)) {
++                    // A dash gap can cover the entire stroke. Its fill must remain visible.
++                    rleReset(shape.strokeRle);
++                    strokeBox.reset();
++                }
++                curBox = shape.bbox.valid() ? shape.bbox : strokeBox;
++                if (strokeBox.valid()) curBox.add(strokeBox);
++            }
+             auto ctable = flags[0] & RenderUpdateFlag::GradientStroke;
+             if (ctable || flags[0] & RenderUpdateFlag::Transform) {
+                 if (!fillPrepare(shape.stroke->fill, rshape->strokeFill(), transform, renderer->surface, opacity, ctable)) goto dismiss;

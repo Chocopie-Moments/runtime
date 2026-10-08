@@ -1,0 +1,32 @@
+node_modules/
+dist/
+release/
+*.tsbuildinfo
+.DS_Store
+.env*
+.dev.vars*
+scripts/generated/
+native/**/target/
+native/**/target-*/
+native/**/.build/
+native/**/fuzz/artifacts/
+native/**/fuzz/corpus/
+
+__pycache__/
+*.pyc
+
+# Android compilation and RN staging; canonical JNI/Kotlin source lives in native/android.
+**/android/.gradle/
+**/android/build/
+**/android/local.properties
+packages/react-native/android/src/main/jniLibs/
+packages/react-native/android/src/main/ANDROID-BUILD.json
+packages/react-native/android/src/main/java/com/chocopie/ChocoNative.kt
+packages/react-native/android/src/main/java/com/chocopie/ChocoView.kt
+packages/react-native/android/src/main/third-party/android-ndk/
+
+# Independent Android SDK staging and Gradle outputs.
+native/android/sdk/.gradle/
+native/android/sdk/build/
+native/android/aar-consumer/.gradle/
+native/android/aar-consumer/build/

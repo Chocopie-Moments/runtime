@@ -1,0 +1,5 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {"noEmit": false, "declaration": true, "emitDeclarationOnly": true, "rootDir": ".", "outDir": "packages/codec/dist/types"},
+  "include": ["packages/codec/src", "src/codec/pako.d.ts"]
+}

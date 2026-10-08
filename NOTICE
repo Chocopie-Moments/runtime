@@ -1,0 +1,7 @@
+Chocopie runtime
+Copyright 2026 Chocopie contributors
+
+Includes ThorVG under the MIT license. See third-party/ThorVG-LICENSE.
+Synthetic lettering fixtures use Inter, Averia Serif Libre and Geist Mono; their font licenses are in fixtures/fonts.
+Dependency notices for packed binaries are generated during packaging.
+The isolated Android proof scaffold includes React Native Community template 0.87.1; see native/android/consumer/NOTICE and its retained MIT licenses.

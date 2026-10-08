@@ -1,0 +1,119 @@
+[
+  {
+    "op": "seek",
+    "seconds": 0
+  },
+  {
+    "op": "advance",
+    "seconds": 0.017
+  },
+  {
+    "op": "advance",
+    "seconds": 0.11
+  },
+  {
+    "op": "trigger",
+    "name": "hover"
+  },
+  {
+    "op": "advance",
+    "seconds": 0.19
+  },
+  {
+    "op": "look",
+    "x": 140,
+    "y": 20
+  },
+  {
+    "op": "advance",
+    "seconds": 0.051
+  },
+  {
+    "op": "trigger",
+    "name": "click"
+  },
+  {
+    "op": "advance",
+    "seconds": 0.127
+  },
+  {
+    "op": "pause",
+    "paused": true
+  },
+  {
+    "op": "advance",
+    "seconds": 5
+  },
+  {
+    "op": "seek",
+    "seconds": 0.37
+  },
+  {
+    "op": "pause",
+    "paused": false
+  },
+  {
+    "op": "state",
+    "name": null
+  },
+  {
+    "op": "advance",
+    "seconds": 0.081
+  },
+  {
+    "op": "look",
+    "x": null,
+    "y": null
+  },
+  {
+    "op": "advance",
+    "seconds": 0.043
+  },
+  {
+    "op": "palette",
+    "colors": {
+      "accent": "#2299aa",
+      "secondary": "#ee9933",
+      "ink": "#203040",
+      "background": "#fffef0"
+    }
+  },
+  {
+    "op": "resize",
+    "width": 213,
+    "height": 167
+  },
+  {
+    "op": "advance",
+    "seconds": 0.501
+  },
+  {
+    "op": "reducedMotion",
+    "reduced": true
+  },
+  {
+    "op": "advance",
+    "seconds": 1.19
+  },
+  {
+    "op": "reducedMotion",
+    "reduced": false
+  },
+  {
+    "op": "advance",
+    "seconds": 0.11
+  },
+  {
+    "op": "seek",
+    "seconds": 8
+  },
+  {
+    "op": "seek",
+    "seconds": 0.23
+  },
+  {
+    "op": "resize",
+    "width": 320,
+    "height": 320
+  }
+]

@@ -1,0 +1,3 @@
+export const CHOCO_FORMAT_VERSION = 0;
+export const CHOCO_FORMAT_REVISION = 2;
+export const CHOCO_SEMANTICS_VERSION = 1;

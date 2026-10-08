@@ -1,0 +1,52 @@
+{
+  "name": "@chocopie/react-native",
+  "version": "0.1.0-dev.0",
+  "license": "Apache-2.0",
+  "main": "src/index.tsx",
+  "types": "src/index.tsx",
+  "react-native": "src/index.tsx",
+  "scripts": {
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "devDependencies": {
+    "@types/react": "19.2.18",
+    "react": "19.2.3",
+    "react-native": "0.87.1",
+    "typescript": "7.0.2"
+  },
+  "files": [
+    "src",
+    "ios",
+    "ChocoReactNative.podspec",
+    "react-native.config.js",
+    "THORVG-LICENSE",
+    "NATIVE-BUILD.json",
+    "LICENSE",
+    "NOTICE",
+    "third-party",
+    "android"
+  ],
+  "peerDependencies": {
+    "react": ">=19.2.0 <20",
+    "react-native": "^0.86.3 || ^0.87.1"
+  },
+  "codegenConfig": {
+    "name": "ChocoSpec",
+    "type": "components",
+    "jsSrcsDir": "src",
+    "ios": {
+      "componentProvider": {
+        "ChocoNativeView": "CPChocoComponentView"
+      }
+    },
+    "android": {
+      "javaPackageName": "com.chocopie.reactnative"
+    }
+  },
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Chocopie-Moments/runtime.git",
+    "directory": "packages/react-native"
+  }
+}

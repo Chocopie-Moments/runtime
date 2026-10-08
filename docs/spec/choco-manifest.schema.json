@@ -1,0 +1,152 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "format": {
+      "type": "string",
+      "const": "choco"
+    },
+    "formatVersion": {
+      "type": "number",
+      "const": 0
+    },
+    "formatRevision": {
+      "type": "number",
+      "const": 2
+    },
+    "semanticsVersion": {
+      "type": "number",
+      "const": 1
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 80
+    },
+    "kind": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 80
+    },
+    "palette": {
+      "type": "object",
+      "properties": {
+        "accent": {
+          "$ref": "#/$defs/__schema0"
+        },
+        "secondary": {
+          "$ref": "#/$defs/__schema0"
+        },
+        "ink": {
+          "$ref": "#/$defs/__schema0"
+        },
+        "background": {
+          "$ref": "#/$defs/__schema0"
+        }
+      },
+      "required": [
+        "accent",
+        "secondary",
+        "ink",
+        "background"
+      ],
+      "additionalProperties": false
+    },
+    "states": {
+      "minItems": 1,
+      "maxItems": 256,
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema1"
+      }
+    },
+    "required": {
+      "maxItems": 128,
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema2"
+      }
+    },
+    "files": {
+      "type": "object",
+      "properties": {
+        "scene.json": {
+          "$ref": "#/$defs/__schema3"
+        },
+        "motion.json": {
+          "$ref": "#/$defs/__schema3"
+        },
+        "ATTRIBUTION.txt": {
+          "$ref": "#/$defs/__schema3"
+        }
+      },
+      "required": [
+        "scene.json",
+        "motion.json"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "format",
+    "formatVersion",
+    "formatRevision",
+    "semanticsVersion",
+    "name",
+    "kind",
+    "palette",
+    "states",
+    "required",
+    "files"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "__schema0": {
+      "type": "string",
+      "pattern": "^#[a-fA-F0-9]{6}$"
+    },
+    "__schema1": {
+      "type": "string",
+      "pattern": "^[a-zA-Z][a-zA-Z0-9_-]{0,79}$"
+    },
+    "__schema2": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100
+        },
+        "version": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "maximum": 9007199254740991
+        }
+      },
+      "required": [
+        "id",
+        "version"
+      ],
+      "additionalProperties": false
+    },
+    "__schema3": {
+      "type": "object",
+      "properties": {
+        "sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "bytes": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2097152
+        }
+      },
+      "required": [
+        "sha256",
+        "bytes"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

@@ -1,0 +1,28 @@
+[package]
+name = "choco-native-fuzz"
+version = "0.0.0"
+edition = "2024"
+publish = false
+
+[package.metadata]
+cargo-fuzz = true
+
+[dependencies]
+libfuzzer-sys = "0.4"
+choco-native = { path = ".." }
+choco-core = { path = "../../choco-core" }
+serde_json = "1.0"
+
+[[bin]]
+name = "archive"
+path = "fuzz_targets/archive.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "scene"
+path = "fuzz_targets/scene.rs"
+test = false
+doc = false
+bench = false

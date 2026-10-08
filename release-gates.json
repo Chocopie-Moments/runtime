@@ -1,0 +1,39 @@
+{
+  "ready": false,
+  "format": 0,
+  "revision": 2,
+  "semantics": 1,
+  "blockers": [
+    "Reviewed runtime-only source boundary and clean publication baseline; repository currently private",
+    "Physical iOS device startup, frame, memory and energy measurements; minimum-OS acceptance",
+    "Physical Android device startup/frame/memory/energy and minimum-API acceptance; API36 ARM64 emulator standalone Kotlin, bare RN 0.87.1, earlier R8 RN, and strict Expo 57.0.17/RN0.86.3/React19.2.3 offline execution passed, including sampled exact raw native/WASM parity and 16 Kotlin reattach checks",
+    "Release-backed CLI distribution and supported native installer targets; local web/React catalog consumers passed",
+    "Reviewed startup/frame/memory/energy budgets and complete release notices; current browser size accepted for first cutover",
+    "Approved first npm publication and configured npm trusted publisher",
+    "Tagged Swift Package URL/checksum manifest for the reviewed XCFramework release"
+  ],
+  "scope": {
+    "firstCutover": [
+      "web",
+      "ios",
+      "android"
+    ],
+    "followUp": [
+      "native-desktop"
+    ],
+    "browserSize": {
+      "gzipBytes": 321391,
+      "acceptedForFirstCutover": true,
+      "furtherOptimization": "after-cutover",
+      "decisionDate": "2026-10-08"
+    },
+    "deferredChecks": {
+      "physicalIPhone": {
+        "decisionDate": "2026-10-08",
+        "status": "deferred-by-founder",
+        "reason": "Apple signing requires the Account Holder to accept the pending Program License Agreement",
+        "verified": false
+      }
+    }
+  }
+}

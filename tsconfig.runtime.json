@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "rootDir": ".",
+    "outDir": "packages/runtime/dist/types"
+  },
+  "exclude": ["**/*.test.ts", "**/*.test.tsx"],
+  "include": [
+    "packages/runtime/src",
+    "src/codec/pako.d.ts"
+  ]
+}

@@ -1,0 +1,5 @@
+# Isolated Android proof template
+
+Standard React Native Community 0.87.1 / CLI 20.2.0 app scaffold copied from the independently installed proof consumer. The package lock pins its dependency tree; no runtime tarball, node_modules, generated keys, build outputs or hosted product data is checked in. Android pins NDK 27.1.12297006, SDK/build tools 37, Kotlin 2.2.0 and the standard Gradle 9.4.1 wrapper. The checked-in wrapper JAR is the standard template bootstrap, not a Chocopie native binary.
+
+`scripts/choco/build-android-consumer.sh` copies this template to a new isolated directory, installs the reviewed Android-only tarball, wires the bundled proof app and native verification Activity, generates a test signing key and builds Fabric Release with two workers. `.github/workflows/android-proof.yml` performs this on private Ubuntu CI with official Android tools. It uploads an APK, native library, package and provenance; it never publishes. Compilation does not certify device execution. Install the APK and run `scripts/choco/run-android-verification.sh` for native evidence; test the Fabric screen separately.

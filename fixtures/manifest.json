@@ -1,0 +1,272 @@
+[
+  {
+    "id": "ambient.keys",
+    "asset": "fixtures/ambient.keys.choco",
+    "trace": "fixtures/ambient.keys.trace.json"
+  },
+  {
+    "id": "ambient.float",
+    "asset": "fixtures/ambient.float.choco",
+    "trace": "fixtures/ambient.float.trace.json"
+  },
+  {
+    "id": "ambient.bob",
+    "asset": "fixtures/ambient.bob.choco",
+    "trace": "fixtures/ambient.bob.trace.json"
+  },
+  {
+    "id": "ambient.sway",
+    "asset": "fixtures/ambient.sway.choco",
+    "trace": "fixtures/ambient.sway.trace.json"
+  },
+  {
+    "id": "ambient.drift",
+    "asset": "fixtures/ambient.drift.choco",
+    "trace": "fixtures/ambient.drift.trace.json"
+  },
+  {
+    "id": "ambient.breathe",
+    "asset": "fixtures/ambient.breathe.choco",
+    "trace": "fixtures/ambient.breathe.trace.json"
+  },
+  {
+    "id": "ambient.pulse",
+    "asset": "fixtures/ambient.pulse.choco",
+    "trace": "fixtures/ambient.pulse.trace.json"
+  },
+  {
+    "id": "ambient.spin",
+    "asset": "fixtures/ambient.spin.choco",
+    "trace": "fixtures/ambient.spin.trace.json"
+  },
+  {
+    "id": "ambient.orbit",
+    "asset": "fixtures/ambient.orbit.choco",
+    "trace": "fixtures/ambient.orbit.trace.json"
+  },
+  {
+    "id": "ambient.flicker",
+    "asset": "fixtures/ambient.flicker.choco",
+    "trace": "fixtures/ambient.flicker.trace.json"
+  },
+  {
+    "id": "ambient.blink",
+    "asset": "fixtures/ambient.blink.choco",
+    "trace": "fixtures/ambient.blink.trace.json"
+  },
+  {
+    "id": "ambient.twinkle",
+    "asset": "fixtures/ambient.twinkle.choco",
+    "trace": "fixtures/ambient.twinkle.trace.json"
+  },
+  {
+    "id": "ambient.stream",
+    "asset": "fixtures/ambient.stream.choco",
+    "trace": "fixtures/ambient.stream.trace.json"
+  },
+  {
+    "id": "ambient.bounce",
+    "asset": "fixtures/ambient.bounce.choco",
+    "trace": "fixtures/ambient.bounce.trace.json"
+  },
+  {
+    "id": "beat.pop",
+    "asset": "fixtures/beat.pop.choco",
+    "trace": "fixtures/beat.pop.trace.json"
+  },
+  {
+    "id": "beat.drop",
+    "asset": "fixtures/beat.drop.choco",
+    "trace": "fixtures/beat.drop.trace.json"
+  },
+  {
+    "id": "beat.rise",
+    "asset": "fixtures/beat.rise.choco",
+    "trace": "fixtures/beat.rise.trace.json"
+  },
+  {
+    "id": "beat.slideIn",
+    "asset": "fixtures/beat.slideIn.choco",
+    "trace": "fixtures/beat.slideIn.trace.json"
+  },
+  {
+    "id": "beat.fadeIn",
+    "asset": "fixtures/beat.fadeIn.choco",
+    "trace": "fixtures/beat.fadeIn.trace.json"
+  },
+  {
+    "id": "beat.grow",
+    "asset": "fixtures/beat.grow.choco",
+    "trace": "fixtures/beat.grow.trace.json"
+  },
+  {
+    "id": "beat.unfold",
+    "asset": "fixtures/beat.unfold.choco",
+    "trace": "fixtures/beat.unfold.trace.json"
+  },
+  {
+    "id": "beat.to",
+    "asset": "fixtures/beat.to.choco",
+    "trace": "fixtures/beat.to.trace.json"
+  },
+  {
+    "id": "beat.travel",
+    "asset": "fixtures/beat.travel.choco",
+    "trace": "fixtures/beat.travel.trace.json"
+  },
+  {
+    "id": "beat.show",
+    "asset": "fixtures/beat.show.choco",
+    "trace": "fixtures/beat.show.trace.json"
+  },
+  {
+    "id": "beat.hide",
+    "asset": "fixtures/beat.hide.choco",
+    "trace": "fixtures/beat.hide.trace.json"
+  },
+  {
+    "id": "beat.fadeOut",
+    "asset": "fixtures/beat.fadeOut.choco",
+    "trace": "fixtures/beat.fadeOut.trace.json"
+  },
+  {
+    "id": "beat.wave",
+    "asset": "fixtures/beat.wave.choco",
+    "trace": "fixtures/beat.wave.trace.json"
+  },
+  {
+    "id": "beat.wiggle",
+    "asset": "fixtures/beat.wiggle.choco",
+    "trace": "fixtures/beat.wiggle.trace.json"
+  },
+  {
+    "id": "beat.shake",
+    "asset": "fixtures/beat.shake.choco",
+    "trace": "fixtures/beat.shake.trace.json"
+  },
+  {
+    "id": "beat.nod",
+    "asset": "fixtures/beat.nod.choco",
+    "trace": "fixtures/beat.nod.trace.json"
+  },
+  {
+    "id": "beat.hop",
+    "asset": "fixtures/beat.hop.choco",
+    "trace": "fixtures/beat.hop.trace.json"
+  },
+  {
+    "id": "beat.squash",
+    "asset": "fixtures/beat.squash.choco",
+    "trace": "fixtures/beat.squash.trace.json"
+  },
+  {
+    "id": "beat.pulse",
+    "asset": "fixtures/beat.pulse.choco",
+    "trace": "fixtures/beat.pulse.trace.json"
+  },
+  {
+    "id": "beat.spin",
+    "asset": "fixtures/beat.spin.choco",
+    "trace": "fixtures/beat.spin.trace.json"
+  },
+  {
+    "id": "beat.lift",
+    "asset": "fixtures/beat.lift.choco",
+    "trace": "fixtures/beat.lift.trace.json"
+  },
+  {
+    "id": "beat.burst",
+    "asset": "fixtures/beat.burst.choco",
+    "trace": "fixtures/beat.burst.trace.json"
+  },
+  {
+    "id": "beat.flow",
+    "asset": "fixtures/beat.flow.choco",
+    "trace": "fixtures/beat.flow.trace.json"
+  },
+  {
+    "id": "beat.drawOn",
+    "asset": "fixtures/beat.drawOn.choco",
+    "trace": "fixtures/beat.drawOn.trace.json"
+  },
+  {
+    "id": "beat.drawOff",
+    "asset": "fixtures/beat.drawOff.choco",
+    "trace": "fixtures/beat.drawOff.trace.json"
+  },
+  {
+    "id": "follow.pendulum",
+    "asset": "fixtures/follow.pendulum.choco",
+    "trace": "fixtures/follow.pendulum.trace.json"
+  },
+  {
+    "id": "follow.lean",
+    "asset": "fixtures/follow.lean.choco",
+    "trace": "fixtures/follow.lean.trace.json"
+  },
+  {
+    "id": "follow.stretch",
+    "asset": "fixtures/follow.stretch.choco",
+    "trace": "fixtures/follow.stretch.trace.json"
+  },
+  {
+    "id": "motion.child-targets",
+    "asset": "fixtures/motion.child-targets.choco",
+    "trace": "fixtures/motion.child-targets.trace.json"
+  },
+  {
+    "id": "motion.prototype-names",
+    "asset": "fixtures/motion.prototype-names.choco",
+    "trace": "fixtures/motion.prototype-names.trace.json"
+  },
+  {
+    "id": "motion.settings",
+    "asset": "fixtures/motion.settings.choco",
+    "trace": "fixtures/motion.settings.trace.json"
+  },
+  {
+    "id": "scene.shapes",
+    "asset": "fixtures/scene.shapes.choco",
+    "trace": "fixtures/scene.shapes.trace.json"
+  },
+  {
+    "id": "scene.gradient.pad",
+    "asset": "fixtures/scene.gradient.pad.choco",
+    "trace": "fixtures/scene.gradient.pad.trace.json"
+  },
+  {
+    "id": "scene.gradient.repeat",
+    "asset": "fixtures/scene.gradient.repeat.choco",
+    "trace": "fixtures/scene.gradient.repeat.trace.json"
+  },
+  {
+    "id": "scene.gradient.reflect",
+    "asset": "fixtures/scene.gradient.reflect.choco",
+    "trace": "fixtures/scene.gradient.reflect.trace.json"
+  },
+  {
+    "id": "scene.clip.evenodd",
+    "asset": "fixtures/scene.clip.evenodd.choco",
+    "trace": "fixtures/scene.clip.evenodd.trace.json"
+  },
+  {
+    "id": "scene.use",
+    "asset": "fixtures/scene.use.choco",
+    "trace": "fixtures/scene.use.trace.json"
+  },
+  {
+    "id": "scene.text",
+    "asset": "fixtures/scene.text.choco",
+    "trace": "fixtures/scene.text.trace.json"
+  },
+  {
+    "id": "scene.blend.opaque-overlap",
+    "asset": "fixtures/scene.blend.opaque-overlap.choco",
+    "trace": "fixtures/scene.blend.opaque-overlap.trace.json"
+  },
+  {
+    "id": "scene.stroke.dashes",
+    "asset": "fixtures/scene.stroke.dashes.choco",
+    "trace": "fixtures/scene.stroke.dashes.trace.json"
+  }
+]

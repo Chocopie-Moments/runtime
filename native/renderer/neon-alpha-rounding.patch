@@ -1,0 +1,15 @@
+diff --git a/src/renderer/cpu_engine/tvgSwRasterNeon.h b/src/renderer/cpu_engine/tvgSwRasterNeon.h
+index 9fe4d2f..b914913 100644
+--- a/src/renderer/cpu_engine/tvgSwRasterNeon.h
++++ b/src/renderer/cpu_engine/tvgSwRasterNeon.h
+@@ -142,7 +142,9 @@ static uint32_t neonInterpDownScaler(const uint32_t* img, uint32_t stride, uint3
+ 
+ static uint8x8_t ALPHA_BLEND(uint8x8_t c, uint8x8_t a)
+ {
+-    return vshrn_n_u16(vmull_u8(c, a), 8);
++    // Match scalar ALPHA_BLEND: each channel is c * (a + 1) / 256.
++    // Widen before adding the bias so alpha 255 becomes 256 without wrapping.
++    return vshrn_n_u16(vmlal_u8(vmovl_u8(c), c, a), 8);
+ }
+ 
+ static uint8x8_t neonScalePixels(uint8x8_t pixels, uint32x2_t factors)

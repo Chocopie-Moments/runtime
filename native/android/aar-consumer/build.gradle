@@ -1,0 +1,23 @@
+plugins {
+    id 'com.android.application' version '9.2.1'
+    id 'org.jetbrains.kotlin.android' version '2.2.0'
+}
+android {
+    namespace 'com.chocopie.aarproof'
+    compileSdk 37
+    buildToolsVersion '37.0.0'
+    defaultConfig { applicationId 'com.chocopie.aarproof'; minSdk 24; targetSdk 36; versionCode 1; versionName '1.0' }
+    sourceSets.main {
+        java.srcDirs = ['../verification']
+        assets.srcDirs = ['build/staged/assets']
+    }
+    buildTypes.release {
+        minifyEnabled true
+        signingConfig signingConfigs.debug
+        proguardFiles getDefaultProguardFile('proguard-android-optimize.txt')
+    }
+    compileOptions { sourceCompatibility JavaVersion.VERSION_17; targetCompatibility JavaVersion.VERSION_17 }
+    kotlinOptions { jvmTarget = '17' }
+}
+// An actual external binary boundary: no project/source or React Native dependency.
+dependencies { implementation files('build/staged/choco-android-sdk-release.aar') }

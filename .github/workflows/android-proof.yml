@@ -1,0 +1,126 @@
+name: Private Android Release proof
+on:
+  workflow_call:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: android-proof-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  compile:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    env:
+      CHOCO_BUILD_JOBS: '2'
+      CHOCO_ANDROID_ABIS: arm64-v8a
+      CHOCO_ANDROID_API: '24'
+      CMAKE_BUILD_PARALLEL_LEVEL: '2'
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '24.21.0'
+          cache: npm
+          cache-dependency-path: native/android/consumer/package-lock.json
+      - name: Cache Gradle dependencies and task outputs
+        uses: gradle/actions/setup-gradle@0723195856401067f7a2779048b490ace7a47d7c # v5 (verified official tag)
+        with:
+          cache-read-only: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork }}
+          dependency-graph: disabled
+          build-scan-publish: false
+      - name: Install pinned official Android and native tools
+        shell: bash
+        run: |
+          export JAVA_HOME="$JAVA_HOME_17_X64"
+          export PATH="$JAVA_HOME/bin:$PATH"
+          echo "JAVA_HOME=$JAVA_HOME" >> "$GITHUB_ENV"
+          echo "$JAVA_HOME/bin" >> "$GITHUB_PATH"
+          sdkmanager="$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"
+          test -x "$sdkmanager"
+          "$sdkmanager" 'ndk;27.1.12297006' 'platforms;android-37.0' 'build-tools;37.0.0' 'platforms;android-36' 'build-tools;36.0.0' 'platform-tools'
+          echo "ANDROID_NDK_HOME=$ANDROID_HOME/ndk/27.1.12297006" >> "$GITHUB_ENV"
+          rustup toolchain install 1.97.1 --profile minimal
+          rustup default 1.97.1
+          rustup target add aarch64-linux-android
+          python3 -m venv "$RUNNER_TEMP/choco-tools"
+          "$RUNNER_TEMP/choco-tools/bin/pip" install meson==1.9.2 ninja==1.13.0
+          echo "$RUNNER_TEMP/choco-tools/bin" >> "$GITHUB_PATH"
+      - name: Compile shared Rust and ThorVG JNI library
+        shell: bash
+        run: bash scripts/choco/build-android-package.sh
+      - name: Build independent Kotlin Android SDK AAR (no React Native dependency)
+        shell: bash
+        run: bash scripts/choco/build-android-sdk.sh
+      - name: Compile minified Kotlin-only consumer of the actual AAR
+        shell: bash
+        run: bash scripts/choco/build-android-aar-consumer.sh
+      - name: Upload independent SDK and Kotlin consumer immediately
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: android-sdk-${{ github.sha }}
+          path: release/android-sdk/
+          if-no-files-found: error
+          retention-days: 14
+      - name: Pack Android-only private consumer artifact
+        shell: bash
+        run: |
+          bash scripts/choco/pack-android-proof.sh
+          echo "CHOCO_RN_PACKAGE=$(python3 -c 'import json;print(json.load(open("scripts/generated/choco-android-proof-package.json"))["tarball"])')" >> "$GITHUB_ENV"
+          echo "CHOCO_ANDROID_CONSUMER=$RUNNER_TEMP/choco-android-consumer" >> "$GITHUB_ENV"
+      - name: Build actual RN 0.87.1 Fabric Release APK
+        shell: bash
+        run: bash scripts/choco/build-android-consumer.sh
+      - name: Collect compiled proof and provenance
+        if: success()
+        shell: bash
+        run: |
+          mkdir -p release/android-proof
+          cp "$CHOCO_RN_PACKAGE" release/android-proof/
+          cp "$CHOCO_ANDROID_CONSUMER/android/app/build/outputs/apk/release/app-release.apk" release/android-proof/
+          cp "$CHOCO_ANDROID_CONSUMER/package-lock.json" release/android-proof/consumer-package-lock.json
+          cp -R packages/react-native/android/src/main/jniLibs release/android-proof/
+          cp packages/react-native/android/src/main/ANDROID-BUILD.json release/android-proof/
+          cp scripts/generated/choco-android-*.json release/android-proof/
+      - name: R8-minified Release JNI compile proof
+        shell: bash
+        run: |
+          bash "$CHOCO_ANDROID_CONSUMER/android/gradlew" -p "$CHOCO_ANDROID_CONSUMER/android" --no-daemon --build-cache --max-workers=2 -PreactNativeArchitectures="$CHOCO_ANDROID_ABIS" -Dorg.gradle.parallel=false -PenableProguardInReleaseBuilds=true assembleRelease
+          mkdir -p release/android-minified
+          cp "$CHOCO_ANDROID_CONSUMER/android/app/build/outputs/apk/release/app-release.apk" release/android-minified/app-release-minified.apk
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        if: always()
+        with:
+          name: android-proof-${{ github.sha }}
+          path: |
+            release/android-proof/
+            release/android-sdk/
+            scripts/generated/choco-android-*.json
+            packages/react-native/android/src/main/jniLibs/
+            packages/react-native/android/src/main/ANDROID-BUILD.json
+            packages/react-native/android/src/main/third-party/
+          if-no-files-found: warn
+          retention-days: 14
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        if: always()
+        with:
+          name: android-sdk-r8-${{ github.sha }}
+          path: |
+            release/android-sdk/
+            release/android-minified/
+          if-no-files-found: warn
+          retention-days: 14
+      - name: Build strict Expo 57.0.17 Android Release consumer
+        shell: bash
+        run: |
+          export CHOCO_EXPO_ANDROID_CONSUMER="$RUNNER_TEMP/choco-expo-android-consumer"
+          bash scripts/choco/build-android-expo-consumer.sh
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        if: always()
+        with:
+          name: android-expo-${{ github.sha }}
+          path: release/android-expo/
+          if-no-files-found: warn
+          retention-days: 14

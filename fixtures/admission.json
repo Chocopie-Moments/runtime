@@ -1,0 +1,394 @@
+[
+  {
+    "path": "fixtures/admission/ambient.keys.choco",
+    "accepted": true
+  },
+  {
+    "path": "fixtures/admission/ambient.float.choco",
+    "accepted": true
+  },
+  {
+    "path": "fixtures/admission/ambient.bob.choco",
+    "accepted": true
+  },
+  {
+    "path": "fixtures/admission/ambient.sway.choco",
+    "accepted": true
+  },
+  {
+    "path": "fixtures/admission/ambient.drift.choco",
+    "accepted": true
+  },
+  {
+    "path": "fixtures/admission/ambient.breathe.choco",
+    "accepted": true
+  },
+  {
+    "path": "fixtures/admission/ambient.pulse.choco",
+    "accepted": true
+  },
+  {
+    "path": "fixtures/admission/ambient.spin.choco",
+    "accepted": true
+  },
+  {
+    "path": "fixtures/admission/ambient.orbit.choco",
+    "accepted": true
+  },
+  {
+    "path": "fixtures/admission/ambient.flicker.choco",
+    "accepted": true
+  },
+  {
+    "path": "fixtures/admission/ambient.blink.choco",
+    "accepted": true
+  },
+  {
+    "path": "fixtures/admission/ambient.twinkle.choco",
+    "accepted": true
+  },
+  {
+    "path": "fixtures/admission/ambient.stream.choco",
+    "accepted": true
+  },
+  {
+    "path": "fixtures/admission/ambient.bounce.choco",
+    "accepted": true
+  },
+  {
+    "path": "fixtures/admission/beat.pop.choco",
+    "accepted": true
+  },
+  {
+    "path": "fixtures/admission/beat.drop.choco",
+    "accepted": true
+  },
+  {
+    "path": "fixtures/admission/beat.rise.choco",
+    "accepted": true
+  },
+  {
+    "path": "fixtures/admission/beat.slideIn.choco",
+    "accepted": true
+  },
+  {
+    "path": "fixtures/admission/beat.fadeIn.choco",
+    "accepted": true
+  },
+  {
+    "path": "fixtures/admission/beat.grow.choco",
+    "accepted": true
+  },
+  {
+    "path": "fixtures/admission/beat.unfold.choco",
+    "accepted": true
+  },
+  {
+    "path": "fixtures/admission/beat.to.choco",
+    "accepted": true
+  },
+  {
+    "path": "fixtures/admission/beat.travel.choco",
+    "accepted": true
+  },
+  {
+    "path": "fixtures/admission/beat.show.choco",
+    "accepted": true
+  },
+  {
+    "path": "fixtures/admission/beat.hide.choco",
+    "accepted": true
+  },
+  {
+    "path": "fixtures/admission/beat.fadeOut.choco",
+    "accepted": true
+  },
+  {
+    "path": "fixtures/admission/beat.wave.choco",
+    "accepted": true
+  },
+  {
+    "path": "fixtures/admission/beat.wiggle.choco",
+    "accepted": true
+  },
+  {
+    "path": "fixtures/admission/beat.shake.choco",
+    "accepted": true
+  },
+  {
+    "path": "fixtures/admission/beat.nod.choco",
+    "accepted": true
+  },
+  {
+    "path": "fixtures/admission/beat.hop.choco",
+    "accepted": true
+  },
+  {
+    "path": "fixtures/admission/beat.squash.choco",
+    "accepted": true
+  },
+  {
+    "path": "fixtures/admission/beat.pulse.choco",
+    "accepted": true
+  },
+  {
+    "path": "fixtures/admission/beat.spin.choco",
+    "accepted": true
+  },
+  {
+    "path": "fixtures/admission/beat.lift.choco",
+    "accepted": true
+  },
+  {
+    "path": "fixtures/admission/beat.burst.choco",
+    "accepted": true
+  },
+  {
+    "path": "fixtures/admission/beat.flow.choco",
+    "accepted": true
+  },
+  {
+    "path": "fixtures/admission/beat.drawOn.choco",
+    "accepted": true
+  },
+  {
+    "path": "fixtures/admission/beat.drawOff.choco",
+    "accepted": true
+  },
+  {
+    "path": "fixtures/admission/follow.pendulum.choco",
+    "accepted": true
+  },
+  {
+    "path": "fixtures/admission/follow.lean.choco",
+    "accepted": true
+  },
+  {
+    "path": "fixtures/admission/follow.stretch.choco",
+    "accepted": true
+  },
+  {
+    "path": "fixtures/admission/motion.child-targets.choco",
+    "accepted": true
+  },
+  {
+    "path": "fixtures/admission/motion.prototype-names.choco",
+    "accepted": true
+  },
+  {
+    "path": "fixtures/admission/motion.settings.choco",
+    "accepted": true
+  },
+  {
+    "path": "fixtures/admission/scene.shapes.choco",
+    "accepted": true
+  },
+  {
+    "path": "fixtures/admission/scene.gradient.pad.choco",
+    "accepted": true
+  },
+  {
+    "path": "fixtures/admission/scene.gradient.repeat.choco",
+    "accepted": true
+  },
+  {
+    "path": "fixtures/admission/scene.gradient.reflect.choco",
+    "accepted": true
+  },
+  {
+    "path": "fixtures/admission/scene.clip.evenodd.choco",
+    "accepted": true
+  },
+  {
+    "path": "fixtures/admission/scene.use.choco",
+    "accepted": true
+  },
+  {
+    "path": "fixtures/admission/scene.text.choco",
+    "accepted": true
+  },
+  {
+    "path": "fixtures/admission/scene.blend.opaque-overlap.choco",
+    "accepted": true
+  },
+  {
+    "path": "fixtures/admission/scene.stroke.dashes.choco",
+    "accepted": true
+  },
+  {
+    "path": "fixtures/admission/kind.welcome.choco",
+    "accepted": true
+  },
+  {
+    "path": "fixtures/admission/kind.waiting.choco",
+    "accepted": true
+  },
+  {
+    "path": "fixtures/admission/kind.empty.choco",
+    "accepted": true
+  },
+  {
+    "path": "fixtures/admission/kind.success.choco",
+    "accepted": true
+  },
+  {
+    "path": "fixtures/admission/kind.custom.choco",
+    "accepted": true
+  },
+  {
+    "path": "fixtures/admission/subnormal-extent.choco",
+    "accepted": true
+  },
+  {
+    "path": "fixtures/admission/negative.opacity.choco",
+    "accepted": false
+  },
+  {
+    "path": "fixtures/admission/negative.coordinate.choco",
+    "accepted": false
+  },
+  {
+    "path": "fixtures/admission/negative.duplicate-binding.choco",
+    "accepted": false
+  },
+  {
+    "path": "fixtures/admission/negative.missing-binding.choco",
+    "accepted": false
+  },
+  {
+    "path": "fixtures/admission/negative.host-code.choco",
+    "accepted": false
+  },
+  {
+    "path": "fixtures/admission/negative.null-paint-role.choco",
+    "accepted": false
+  },
+  {
+    "path": "fixtures/admission/negative.unknown-paint.choco",
+    "accepted": false
+  },
+  {
+    "path": "fixtures/admission/negative.negative-stroke.choco",
+    "accepted": false
+  },
+  {
+    "path": "fixtures/admission/negative.invalid-path.choco",
+    "accepted": false
+  },
+  {
+    "path": "fixtures/admission/negative.null-period.choco",
+    "accepted": false
+  },
+  {
+    "path": "fixtures/admission/negative.spring-period.choco",
+    "accepted": false
+  },
+  {
+    "path": "fixtures/admission/negative.unknown-key.choco",
+    "accepted": false
+  },
+  {
+    "path": "fixtures/admission/negative.missing-parent.choco",
+    "accepted": false
+  },
+  {
+    "path": "fixtures/admission/negative.missing-handle.choco",
+    "accepted": false
+  },
+  {
+    "path": "fixtures/admission/negative.cycle.choco",
+    "accepted": false
+  },
+  {
+    "path": "fixtures/admission/negative.inactive-score.choco",
+    "accepted": false
+  },
+  {
+    "path": "fixtures/admission/negative.reserved-state.choco",
+    "accepted": false
+  },
+  {
+    "path": "fixtures/admission/negative.particle-limit.choco",
+    "accepted": false
+  },
+  {
+    "path": "fixtures/admission/negative.retired-tracks.choco",
+    "accepted": false
+  },
+  {
+    "path": "fixtures/admission/negative.retired-revision.choco",
+    "accepted": false
+  },
+  {
+    "path": "fixtures/admission/negative.duplicate-json.choco",
+    "accepted": false
+  },
+  {
+    "path": "fixtures/admission/negative.json-depth.choco",
+    "accepted": false
+  },
+  {
+    "path": "fixtures/admission/negative.json-bom.choco",
+    "accepted": false
+  },
+  {
+    "path": "fixtures/admission/negative.unpaired-surrogate.choco",
+    "accepted": false
+  },
+  {
+    "path": "fixtures/admission/unicode-surrogate-pair.choco",
+    "accepted": true
+  },
+  {
+    "path": "fixtures/admission/negative.state-name-bom.choco",
+    "accepted": false
+  },
+  {
+    "path": "fixtures/admission/state-name-next-line.choco",
+    "accepted": true
+  },
+  {
+    "path": "fixtures/admission/negative.state-name-whitespace.choco",
+    "accepted": false
+  },
+  {
+    "path": "fixtures/admission/negative.deflate-trailing-zero.choco",
+    "accepted": false
+  },
+  {
+    "path": "fixtures/admission/negative.deflate-trailing-stream.choco",
+    "accepted": false
+  },
+  {
+    "path": "fixtures/admission/negative.deflate-truncated.choco",
+    "accepted": false
+  },
+  {
+    "path": "fixtures/admission/negative.deflate-stored-length.choco",
+    "accepted": false
+  },
+  {
+    "path": "fixtures/admission/integer-spelling.choco",
+    "accepted": true
+  },
+  {
+    "path": "fixtures/admission/negative.truncated.choco",
+    "accepted": false
+  },
+  {
+    "path": "fixtures/admission/negative.trailing-archive.choco",
+    "accepted": false
+  },
+  {
+    "path": "fixtures/admission/negative.unknown-entry.choco",
+    "accepted": false
+  },
+  {
+    "path": "fixtures/admission/negative.kind-empty.choco",
+    "accepted": false
+  },
+  {
+    "path": "fixtures/admission/negative.kind-long.choco",
+    "accepted": false
+  }
+]

@@ -1,0 +1,1 @@
+Retrieved from https://github.com/lddubeau/saxes/blob/v6.0.0/LICENSE; the npm 6.0.0 tarball omits this file.

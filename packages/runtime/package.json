@@ -1,0 +1,29 @@
+{
+  "name": "@chocopie/runtime",
+  "version": "0.1.0-dev.0",
+  "private": true,
+  "type": "module",
+  "license": "Apache-2.0",
+  "files": [
+    "dist",
+    "LICENSE",
+    "NOTICE"
+  ],
+  "exports": {
+    "./core": "./dist/choco.mjs",
+    "./choco.wasm": "./dist/choco.wasm",
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Chocopie-Moments/runtime.git",
+    "directory": "packages/runtime"
+  },
+  "sideEffects": false,
+  "dependencies": {
+    "zod": "4.5.4"
+  }
+}

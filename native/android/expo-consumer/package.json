@@ -1,0 +1,15 @@
+{
+  "name": "choco-expo-android-proof",
+  "version": "1.0.0",
+  "private": true,
+  "main": "index.ts",
+  "dependencies": {
+    "expo": "57.0.17",
+    "react": "19.2.3",
+    "react-native": "0.86.3"
+  },
+  "devDependencies": {
+    "@types/react": "19.2.18",
+    "typescript": "7.0.2"
+  }
+}

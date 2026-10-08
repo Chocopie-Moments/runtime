@@ -1,0 +1,4 @@
+# Preserve upstream license and patch bytes, including their original whitespace.
+third-party/** -whitespace
+fixtures/fonts/*LICENSE* -whitespace
+native/renderer/*.patch -whitespace
