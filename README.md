@@ -1,10 +1,10 @@
 # Chocopie runtime
 
-**Private while the source-publication boundary is corrected.** No packages are published.
+**Source publication is authorized from this reviewed history-free baseline.** The first `0.1.0` package release is being prepared; no packages are published yet.
 
 Development implementation of `.choco`: portable drawing and motion data, one Rust behavior engine, and a direct ThorVG vector renderer compiled for native platforms and WebAssembly.
 
-**Unreleased. No production support or published npm installation is promised.** The codec is format 0, revision 2, semantics 1. iOS and React Native iOS lead native development. Android JNI/Kotlin and React Native 0.87.1 Fabric Release execution passed on an Android 16 ARM64 emulator, including R8-minified playback and an offline cold start. The independently packaged, minified Kotlin AAR consumer and strict Expo 57.0.17 / RN 0.86.3 / React 19.2.3 Android Release consumer also passed offline emulator execution. Physical-device, minimum-OS and performance acceptance remain open. Development packages now provide browser canvas playback, deterministic frame capture and a React adapter over the same WASM engine. The CLI remains a development installer requiring an explicit local release catalog. Packed Chromium, Firefox and WebKit functional checks passed; device performance and product-release gates remain open.
+**Unreleased. No production support or published npm installation is promised.** The codec is format 0, revision 2, semantics 1. iOS and React Native iOS lead native development. Android JNI/Kotlin and React Native 0.87.1 Fabric Release execution passed on an Android 16 ARM64 emulator, including R8-minified playback and an offline cold start. The independently packaged, minified Kotlin AAR consumer and strict Expo 57.0.17 / RN 0.86.3 / React 19.2.3 Android Release consumer also passed offline emulator execution. The founder approved `0.1.0` using completed functional checks; physical-device, minimum-OS and performance measurements are deferred until after cutover and remain unverified. Development packages now provide browser canvas playback, deterministic frame capture and a React adapter over the same WASM engine. The CLI installs from an explicit hash-pinned local or HTTPS release catalog; published package availability remains pending. Packed Chromium, Firefox and WebKit functional checks passed; device performance and product-release gates remain open.
 
 Playback is local and offline. Assets contain no executable host code, prompts, account data or remote renderer dependency. A runtime is shared by the moments in an application.
 
@@ -39,7 +39,7 @@ The browser entry point is `loadChoco(source, {signal})` from `@chocopie/runtime
 
 `node packages/cli/test-installed.mjs` verifies the packed installer in clean web and React applications, including generated declarations, SSR, repeated add, update, doctor, conflicts and removal. For real browser lifecycle checks, serve this checkout over HTTP and invoke `checkBrowser()` from `scripts/browser-checks.mjs` in the collaborative browser. That diagnostic checks presentation/capture equality and host lifecycle; it does not measure frame-delivery performance.
 
-See [format](docs/choco-format.md), [release preparation](docs/releasing.md), and [measurements](docs/measurements.md). `IMPORT.json` records the initial source import, including paths subsequently removed during the boundary correction; it is not the current file inventory. Earlier public commits contained authoring helpers, so source publication remains paused pending a clean publication baseline. Chocopie consumes versioned packages, not a Git submodule.
+See [format](docs/choco-format.md), [release preparation](docs/releasing.md), and [measurements](docs/measurements.md). `IMPORT.json` records the initial source import, including paths subsequently removed during the boundary correction; it is not the current file inventory. This publication baseline contains no earlier repository history. The former repository history remains private and is not part of this source release. Chocopie consumes versioned packages, not a Git submodule.
 
 ## License
 

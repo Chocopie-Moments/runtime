@@ -1,17 +1,9 @@
 {
-  "ready": false,
+  "ready": true,
   "format": 0,
   "revision": 2,
   "semantics": 1,
-  "blockers": [
-    "Reviewed runtime-only source boundary and clean publication baseline; repository currently private",
-    "Physical iOS device startup, frame, memory and energy measurements; minimum-OS acceptance",
-    "Physical Android device startup/frame/memory/energy and minimum-API acceptance; API36 ARM64 emulator standalone Kotlin, bare RN 0.87.1, earlier R8 RN, and strict Expo 57.0.17/RN0.86.3/React19.2.3 offline execution passed, including sampled exact raw native/WASM parity and 16 Kotlin reattach checks",
-    "Release-backed CLI distribution and supported native installer targets; local web/React catalog consumers passed",
-    "Reviewed startup/frame/memory/energy budgets and complete release notices; current browser size accepted for first cutover",
-    "Approved first npm publication and configured npm trusted publisher",
-    "Tagged Swift Package URL/checksum manifest for the reviewed XCFramework release"
-  ],
+  "blockers": [],
   "scope": {
     "firstCutover": [
       "web",
@@ -33,7 +25,56 @@
         "status": "deferred-by-founder",
         "reason": "Apple signing requires the Account Holder to accept the pending Program License Agreement",
         "verified": false
+      },
+      "physicalAndroid": {
+        "decisionDate": "2026-10-08",
+        "status": "deferred-by-founder",
+        "reason": "First release approved using completed emulator and functional checks; physical Android measurements follow cutover",
+        "verified": false
+      },
+      "minimumOSAndAPI": {
+        "decisionDate": "2026-10-08",
+        "status": "deferred-by-founder",
+        "declaredMinimums": {
+          "ios": "16.0",
+          "androidAPI": 24
+        },
+        "reason": "Declared SDK minimums have not been verified by execution at the minimum OS/API; acceptance follows cutover",
+        "verified": false
+      },
+      "startupFrameMemoryEnergy": {
+        "decisionDate": "2026-10-08",
+        "status": "deferred-by-founder",
+        "reason": "Physical-device startup, frame, memory and energy measurements and budgets follow cutover; synthetic simulator/emulator timings do not establish these budgets",
+        "verified": false
       }
+    },
+    "firstReleasePolicy": {
+      "version": "0.1.0",
+      "decisionDate": "2026-10-08",
+      "decision": "Ship using completed functional checks; finish physical-device, minimum-OS/API and performance measurements after cutover",
+      "supportedTargets": [
+        "web",
+        "ios",
+        "android"
+      ],
+      "physicalOrMinimumOSVerificationClaimed": false,
+      "postpublicationAcceptanceRequired": true
     }
-  }
+  },
+  "postpublicationAcceptance": {
+    "status": "pending",
+    "verified": false,
+    "requiredBeforeProductCutover": [
+      "Successful release.yml workflow_dispatch at the exact artifact source",
+      "release-acceptance.json with exact source/version/catalog/artifact/tag/binary pins",
+      "Actual tagged Swift Package resolution and checksum-verified released XCFramework"
+    ]
+  },
+  "readinessMeaning": "Authorized first-release source and scope; not a claim that publication, account setup, tag preparation, physical-device or minimum-OS verification has completed",
+  "requiredBeforePublish": [
+    "Successful clean public main preparation workflow at the exact release source and independently reviewed artifact hashes",
+    "Account-owner npm namespace bootstrap and trusted publisher configured for release.yml and release environment",
+    "Existing approved lightweight Swift tag at the exact prepared manifest-only commit"
+  ]
 }

@@ -1,7 +1,6 @@
 {
   "name": "@chocopie/codec",
-  "version": "0.1.0-dev.0",
-  "private": true,
+  "version": "0.1.0",
   "type": "module",
   "license": "Apache-2.0",
   "files": [
