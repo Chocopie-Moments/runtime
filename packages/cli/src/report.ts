@@ -24,7 +24,7 @@ export function planned(result: Installed, info: PlanInfo) {
   }
   rows.push(`Project  ${info.project} · ${PLATFORM[result.target]} · npm`);
   const files = result.changed.filter(change => !change.path.startsWith('.choco/'));
-  const width = Math.max(...files.map(change => change.path.length));
+  const width = Math.max(0, ...files.map(change => change.path.length));
   const out = [`${rows.join('\n')}\n`, `\n${result.command === 'remove' ? 'Changes' : 'Files'}\n`];
   out.push(lines(files.map(change => {
     const checked = change.path.endsWith('.choco') && info.asset !== undefined ? `  ${kb(info.asset)}  checked` : '';

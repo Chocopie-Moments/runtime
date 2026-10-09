@@ -6,6 +6,11 @@ import { CliError } from './files.ts';
 /** A Chocopie install id, as Use shows it: the moment's slug and a random part. */
 export const MOMENT_ID = /^[a-z0-9-]+-[\w-]{16,64}$/;
 const ORIGIN = 'https://app.chocopie.lol';
+/**
+ * The only place a resolved catalog may come from: this repository's GitHub releases. Chocopie names
+ * which release; it cannot point the CLI at packages published anywhere else.
+ */
+export const RELEASES = 'https://github.com/Chocopie-Moments/runtime/releases/download/';
 const sha256 = z.string().regex(/^[a-f0-9]{64}$/);
 export type Resolved = { id: string; origin: string; name: string; app?: string; data: Buffer; catalog: { url: string; sha256: string } };
 
@@ -33,8 +38,7 @@ export async function resolveMoment(id: string, offline = false): Promise<Resolv
   const response = await fetch(new URL(`/r/${encodeURIComponent(id)}/install`, base), {
     redirect: 'error', headers: { accept: 'application/json' }, signal: AbortSignal.timeout(60_000),
   }).catch(() => { throw new CliError('source', 'Chocopie could not be reached. Check your connection and try again.'); });
-  const text = await response.text();
-  if (text.length > 65_536) throw new CliError('source', 'Chocopie answered with more than a moment’s install details.');
+  const text = await bounded(response, 65_536);
   const body: unknown = (() => { try { return JSON.parse(text); } catch { return undefined; } })();
   if (response.status === 404) throw new CliError('not_found', 'No Chocopie moment has this id. Copy the command again from Use in Chocopie.');
   if (!response.ok) {
@@ -45,7 +49,7 @@ export async function resolveMoment(id: string, offline = false): Promise<Resolv
   const parsed = z.object({
     format: z.literal('chocopie-install'), version: z.literal(1), id: z.literal(id),
     name: z.string().regex(/^[a-z][a-z0-9-]{0,47}$/), app: z.string().min(1).max(80).optional(),
-    asset: z.object({ url, sha256 }), catalog: z.object({ url: z.string().url().refine(value => new URL(value).protocol === 'https:'), sha256 }),
+    asset: z.object({ url, sha256 }), catalog: z.object({ url: z.string().url().refine(value => value.startsWith(RELEASES)), sha256 }),
   }).safeParse(body);
   if (!parsed.success) throw new CliError('source', 'Chocopie’s answer for this id was not a valid install description.');
   const { name, app, asset, catalog } = parsed.data;
@@ -60,5 +64,22 @@ export async function reportAdded(moment: Resolved, added: { project: string; fi
   await fetch(new URL(`/r/${encodeURIComponent(moment.id)}/installed`, moment.origin), {
     method: 'POST', redirect: 'error', headers: { 'content-type': 'application/json' },
     body: JSON.stringify({ ...added, project: added.project.slice(0, 80) }), signal: AbortSignal.timeout(3_000),
-  }).then(response => response.body?.cancel(), () => undefined);
+  }).then(response => response.body?.cancel()).catch(() => undefined);
+}
+
+/** Reads at most limit bytes of an answer, so a wrong server cannot make the CLI hold more. */
+async function bounded(response: Response, limit: number) {
+  const reader = response.body?.getReader();
+  const chunks: Uint8Array[] = [];
+  let length = 0;
+  try {
+    for (;;) {
+      const next = await reader?.read();
+      if (next === undefined || next.done) break;
+      length += next.value.length;
+      if (length > limit) throw new CliError('source', 'Chocopie answered with more than a moment’s install details.');
+      chunks.push(next.value);
+    }
+  } finally { await reader?.cancel().catch(() => undefined); }
+  return Buffer.concat(chunks).toString('utf8');
 }

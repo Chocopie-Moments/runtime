@@ -44,10 +44,15 @@ describe('resolving a Chocopie moment id', () => {
   });
 
   it('refuses answers that are not a valid install description for this id', async () => {
-    for (const bad of [answer({ id: 'other-TsMR9fyM0mo6JhuHYgu7jA' }), answer({ asset: { url: `http://app.chocopie.lol/r/${id}/moment.choco`, sha256: digest(asset) } }), answer({ catalog: { url: catalog.url } }), answer({ version: 2 })]) {
+    for (const bad of [answer({ id: 'other-TsMR9fyM0mo6JhuHYgu7jA' }), answer({ catalog: { url: 'https://evil.example/catalog.json', sha256: 'c'.repeat(64) } }), answer({ catalog: { url: 'https://github.com/someone/else/releases/download/v1/catalog.json', sha256: 'c'.repeat(64) } }), answer({ asset: { url: `http://app.chocopie.lol/r/${id}/moment.choco`, sha256: digest(asset) } }), answer({ catalog: { url: catalog.url } }), answer({ version: 2 })]) {
       serve(Response.json(bad));
       await expect(resolveMoment(id)).rejects.toThrow('not a valid install description');
     }
+  });
+
+  it('refuses an answer larger than install details', async () => {
+    serve(new Response('x'.repeat(70_000)));
+    await expect(resolveMoment(id)).rejects.toThrow('more than a moment');
   });
 
   it('says what went wrong when the service refuses', async () => {
@@ -84,6 +89,8 @@ describe('resolving a Chocopie moment id', () => {
     const moment = { id, origin: 'https://app.chocopie.lol', name: 'rhode-empty', data: asset, catalog };
     await reportAdded(moment, { project: 'x'.repeat(120), file: 'src/choco/rhode-empty.tsx', target: 'react' });
     expect(sent).toEqual([{ url: `https://app.chocopie.lol/r/${id}/installed`, body: { project: 'x'.repeat(80), file: 'src/choco/rhode-empty.tsx', target: 'react' } }]);
+    vi.stubGlobal('fetch', vi.fn(async () => new Response(new ReadableStream({ cancel: () => Promise.reject(new Error('broken')) }))));
+    await expect(reportAdded(moment, { project: 'a', file: 'src/choco/rhode-empty.tsx', target: 'react' })).resolves.toBeUndefined();
     vi.stubGlobal('fetch', vi.fn(async () => { throw new TypeError('fetch failed'); }));
     await expect(reportAdded(moment, { project: 'a', file: 'src/choco/rhode-empty.tsx', target: 'react' })).resolves.toBeUndefined();
   });
