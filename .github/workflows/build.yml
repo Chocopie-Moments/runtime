@@ -11,7 +11,54 @@ concurrency:
   group: runtime-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 jobs:
+  # Pull requests run only what their changes affect (scripts/affected.mjs). Pushes to main,
+  # dispatches and calls always run everything, so release artifacts keep full acceptance.
+  changes:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    outputs:
+      scope: ${{ steps.affected.outputs.scope }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - id: affected
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          node --test scripts/affected.test.mjs
+          node scripts/affected.mjs >> "$GITHUB_OUTPUT"
+
+  cli:
+    name: Packed CLI against the published runtime
+    needs: changes
+    if: needs.changes.outputs.scope == 'cli'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '24.21.0'
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test
+      - name: Pack the CLI and install it into clean web and React apps
+        env:
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: |
+          node scripts/package.mjs cli
+          node scripts/stage-released-packages.mjs release
+          node scripts/prepare-package-cache.mjs
+          node packages/cli/test-installed.mjs release
+
   android:
+    needs: changes
+    if: needs.changes.outputs.scope == 'full'
     uses: ./.github/workflows/android-proof.yml
   verify:
     needs: android
@@ -32,6 +79,17 @@ jobs:
         with:
           node-version: '24.21.0'
           cache: npm
+      - name: Reuse this pull request's native builds
+        if: github.event_name == 'pull_request'
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+        with:
+          path: |
+            ~/Library/Caches/chocopie-native
+            ~/.cargo/registry
+            native/choco-core/target
+            native/choco-native/target
+          key: native-${{ runner.os }}-${{ hashFiles('native/**/Cargo.lock', 'scripts/choco/build-renderer.sh', 'third-party/**') }}-${{ github.event.pull_request.number }}
+          restore-keys: native-${{ runner.os }}-${{ hashFiles('native/**/Cargo.lock', 'scripts/choco/build-renderer.sh', 'third-party/**') }}-
       - name: Install pinned build tools
         shell: bash
         run: |
