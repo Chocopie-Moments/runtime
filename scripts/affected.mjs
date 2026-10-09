@@ -6,11 +6,17 @@
  */
 import { execFileSync } from 'node:child_process';
 
+/** CLI files whose behavior only the full graph exercises: React Native installation and Metro. */
+const NATIVE_CLI = ['packages/cli/src/metro.ts', 'packages/cli/src/usage.ts', 'packages/cli/src/native.test.ts', 'packages/cli/test-native-installed.mjs'];
+
 export function scopeOf(paths) {
   const kinds = new Set(paths.map(path =>
-    path.startsWith('packages/cli/') ? 'cli'
-      : path.startsWith('docs/') || (/\.md$/.test(path) && !path.startsWith('packages/') && !path.startsWith('fixtures/')) ? 'docs'
-        : 'full'));
+    NATIVE_CLI.includes(path) ? 'full'
+      : path.startsWith('packages/cli/') ? 'cli'
+        // The spec's schemas live under docs/ and are checked; licenses are packaged.
+        : path.startsWith('docs/spec/') || path.startsWith('third-party/') ? 'full'
+          : path.startsWith('docs/') || (/\.md$/.test(path) && !path.includes('/')) ? 'docs'
+            : 'full'));
   return kinds.has('full') ? 'full' : kinds.has('cli') ? 'cli' : 'docs';
 }
 

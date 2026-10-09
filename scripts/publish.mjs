@@ -18,6 +18,10 @@ if(process.env.RELEASE_SCOPE==='cli') {
  const manifest=JSON.parse(execFileSync('tar',['-xOf',file,'package/package.json'],{encoding:'utf8'}));
  if(manifest.name!=='@chocopie-moments/cli' || manifest.private || manifest.version!==cli.version || !/^\d+\.\d+\.\d+$/.test(cli.version)) throw Error('Unpublishable CLI: '+manifest.version);
  assertPublicationDestinationsAvailable({'@chocopie-moments/cli':cli},process.env.GITHUB_REPOSITORY,`cli-v${cli.version}`);
+ // latest only moves forward: the new CLI must be newer than the one people get today.
+ const current=JSON.parse(execFileSync('npm',['view','@chocopie-moments/cli','version','--json','--registry=https://registry.npmjs.org'],{encoding:'utf8'}));
+ const parts=v=>v.split('.').map(Number), [a,b]=[parts(cli.version),parts(current)], at=a.findIndex((n,i)=>n!==b[i]);
+ if(at===-1 || a[at]<b[at]) throw Error(`CLI ${cli.version} is not newer than the published ${current}.`);
  execFileSync('npm',['publish',file,'--access','public','--provenance','--tag','latest'],{stdio:'inherit'});
  execFileSync('gh',['release','create',`cli-v${cli.version}`,'--target',receipt.source,'--title',`CLI ${cli.version}`,'--notes',`@chocopie-moments/cli ${cli.version} from ${receipt.source}. SHA-256 ${cli.sha256}.`,'--latest=false',file,resolve(directory,'artifacts.json')],{stdio:'inherit'});
  process.exit(0);
