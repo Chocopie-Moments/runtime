@@ -59,7 +59,9 @@ export async function planAdd(app: ReturnType<typeof project>, name: string, ass
   const planned = changes(app.root, before);
   const assetPath = `assets/choco/${name}.choco`;
   const wrapperPath = `src/choco/${name}.${app.target === 'web' ? 'ts' : 'tsx'}`;
-  const generated = new Map([[assetPath, Buffer.from(asset)], [wrapperPath, bytes(usage(name, app.target, decoded.manifest.states))]]);
+  // Manifest states also include event clips; only named states belong in setState's type.
+  const states = [...new Set(['idle', ...Object.keys(decoded.document.motion.score.states ?? {})])].sort();
+  const generated = new Map([[assetPath, Buffer.from(asset)], [wrapperPath, bytes(usage(name, app.target, states))]]);
   for (const [path, content] of generated) {
     if (existing?.files[path] === undefined && read(app.root, path) !== null) throw new CliError('conflict', `File already exists: ${path}. Choose another --name.`);
     planned.put(path, content);
