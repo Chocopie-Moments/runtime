@@ -6,8 +6,10 @@ import { resolve, basename } from 'node:path';
 
 const release = resolve('release');
 mkdirSync(release, { recursive: true });
-execFileSync('npm', ['run', 'check:spec'], { stdio: 'inherit' });
-for (const name of ['codec', 'runtime', 'react', 'cli']) {
+/** `package.mjs cli` packs only the installer, for CI runs whose changes touch nothing else. */
+const only = process.argv[2] === 'cli' ? ['cli'] : ['codec', 'runtime', 'react', 'cli'];
+if (only.length > 1) execFileSync('npm', ['run', 'check:spec'], { stdio: 'inherit' });
+for (const name of only) {
   rmSync(`packages/${name}/dist`, { recursive: true, force: true });
   mkdirSync(`packages/${name}/dist`, { recursive: true });
   copyFileSync('LICENSE', `packages/${name}/LICENSE`);
@@ -33,12 +35,13 @@ function notices(name, metadata) {
     for (const file of licenses) cpSync(`${licenseRoot}/${file}`, `${destination}/${basename(file)}`, {recursive:true});
   }
 }
+const cli = await build({ entryPoints: ['packages/cli/src/index.ts'], outfile: 'packages/cli/dist/index.js', bundle: true, minify: true, metafile: true, format: 'esm', platform: 'node', target: 'node24', banner: { js: '#!/usr/bin/env node' } });
+notices('cli', cli.metafile);
+if (only.length > 1) {
 const codec = await build({ entryPoints: ['packages/codec/src/index.ts'], outdir: 'packages/codec/dist', bundle: true, minify: true, metafile: true, format: 'esm', platform: 'neutral', mainFields: ['module', 'main'], target: 'es2022' });
 notices('codec', codec.metafile);
 execFileSync('npx', ['tsc', '-p', 'tsconfig.declarations.json'], { stdio: 'inherit' });
 for (const name of ['index']) writeFileSync(`packages/codec/dist/${name}.d.ts`, `export * from './types/packages/codec/src/${name}.js';\n`);
-const cli = await build({ entryPoints: ['packages/cli/src/index.ts'], outfile: 'packages/cli/dist/index.js', bundle: true, minify: true, metafile: true, format: 'esm', platform: 'node', target: 'node24', banner: { js: '#!/usr/bin/env node' } });
-notices('cli', cli.metafile);
 for (const name of ['choco.mjs','choco.wasm','build.json']) copyFileSync(`scripts/generated/choco-web/${name}`, `packages/runtime/dist/${name}`);
 cpSync('third-party', 'packages/runtime/dist/third-party', { recursive: true });
 const runtime = await build({ entryPoints: ['packages/runtime/src/index.ts'], outfile: 'packages/runtime/dist/index.js', bundle: true, minify: true, metafile: true, format: 'esm', platform: 'browser', target: 'es2022', external: ['./choco.mjs'] });
@@ -49,14 +52,16 @@ for (const name of ['runtime', 'react']) {
   writeFileSync(`packages/${name}/dist/index.d.ts`, `export * from './types/packages/${name}/src/index.js';\n`);
 }
 copyFileSync('packages/runtime/src/choco.d.mts', 'packages/runtime/dist/types/packages/runtime/src/choco.d.mts');
+}
 const packages = {};
-for (const name of ['codec','runtime','react','cli']) {
+for (const name of only) {
   const [packed] = JSON.parse(execFileSync('npm', ['pack', `./packages/${name}`, '--ignore-scripts', '--json', '--pack-destination', release], { encoding: 'utf8' }));
   const bytes = readFileSync(`${release}/${packed.filename}`);
   packages[packed.name] = { version: packed.version, file: packed.filename, bytes: bytes.length, sha256: createHash('sha256').update(bytes).digest('hex') };
 }
 const source = execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim();
 writeFileSync(`${release}/artifacts.json`, JSON.stringify({ source, dirty: !!execFileSync('git', ['status','--porcelain'], {encoding:'utf8'}).trim(), packages, releaseGates: JSON.parse(readFileSync('release-gates.json','utf8')) }, null, 2)+'\n');
+if (only.length > 1) {
 const { CHOCO_CAPABILITIES, CHOCO_FORMAT_VERSION, CHOCO_SEMANTICS_VERSION } = await import('../packages/codec/dist/index.js');
 const catalogPackages = Object.fromEntries(['@chocopie-moments/runtime','@chocopie-moments/react'].map(name => {
   const { version, file, sha256 } = packages[name];
@@ -69,4 +74,5 @@ const receipt = JSON.parse(readFileSync(`${release}/artifacts.json`, 'utf8'));
 const catalogBytes = readFileSync(`${release}/catalog.json`);
 receipt.catalog = { file: 'catalog.json', bytes: catalogBytes.length, sha256: createHash('sha256').update(catalogBytes).digest('hex') };
 writeFileSync(`${release}/artifacts.json`, JSON.stringify(receipt, null, 2)+'\n');
+}
 console.log(JSON.stringify(packages));

@@ -6,6 +6,11 @@ on:
         description: Successful build.yml run containing the reviewed artifacts
         type: string
         required: true
+      scope:
+        description: family publishes every package with Swift acceptance; cli publishes only the reviewed installer
+        type: choice
+        options: [family, cli]
+        default: family
 permissions:
   contents: read
 jobs:
@@ -38,10 +43,12 @@ jobs:
       - name: Publish exact reviewed bytes
         env:
           GH_TOKEN: ${{ github.token }}
+          RELEASE_SCOPE: ${{ inputs.scope }}
         run: node scripts/publish.mjs reviewed/release
 
   acceptance:
     needs: publish
+    if: inputs.scope == 'family'
     runs-on: macos-26
     environment: release
     timeout-minutes: 15
