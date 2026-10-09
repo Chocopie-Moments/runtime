@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { CHOCO_LIMITS } from '../../../src/codec/archive.ts';
-import { loopback, pinnedDownload } from './catalog.ts';
+import { retryDropped, loopback, pinnedDownload } from './catalog.ts';
 import { CliError } from './files.ts';
 
 /** A Chocopie install id, as Use shows it: the moment's slug and a random part. */
@@ -35,9 +35,9 @@ export async function resolveMoment(id: string, offline = false): Promise<Resolv
   const base = origin();
   const local = loopback(base);
   const url = z.string().url().refine(value => new URL(value).protocol === 'https:' || (local && loopback(new URL(value))), 'Expected HTTPS.');
-  const response = await fetch(new URL(`/r/${encodeURIComponent(id)}/install`, base), {
+  const response = await retryDropped(() => fetch(new URL(`/r/${encodeURIComponent(id)}/install`, base), {
     redirect: 'error', headers: { accept: 'application/json' }, signal: AbortSignal.timeout(60_000),
-  }).catch(() => { throw new CliError('source', 'Chocopie could not be reached. Check your connection and try again.'); });
+  })).catch(() => { throw new CliError('source', 'Chocopie could not be reached. Check your connection and try again.'); });
   const text = await bounded(response, 65_536);
   const body: unknown = (() => { try { return JSON.parse(text); } catch { return undefined; } })();
   if (response.status === 404) throw new CliError('not_found', 'No Chocopie moment has this id. Copy the command again from Use in Chocopie.');
