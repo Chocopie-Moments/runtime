@@ -17,16 +17,40 @@ export type Requirements = { formatVersion: number; semanticsVersion: number; re
 export const loopback = (url: URL) => url.protocol === 'http:' && ['127.0.0.1', 'localhost', '[::1]'].includes(url.hostname);
 /** How long a download may receive nothing before it is abandoned. */
 export const STALL_MS = 30_000;
+/** How long to wait before trying a dropped download or request again: twice, a second then two apart. */
+export const RETRY_WAITS_MS = [1000, 2000] as const;
+
+/** A connection that dropped or stalled, which trying again can fix; an answer from the server cannot. */
+class Dropped extends CliError {}
+const dropped = (error: unknown) => error instanceof Dropped || error instanceof TypeError;
+
+/** Runs a network step, trying it again after a dropped connection; anything else is final. */
+export async function retryDropped<T>(work: () => Promise<T>): Promise<T> {
+  for (let attempt = 0; ; attempt++) {
+    try {
+      return await work();
+    } catch (error) {
+      const wait = RETRY_WAITS_MS[attempt];
+      if (wait === undefined || !dropped(error)) throw error;
+      await new Promise((resolve) => setTimeout(resolve, wait));
+    }
+  }
+}
+
 export async function pinnedDownload(url: string, sha256: string, limit: number, offline = false, allowLoopback = false): Promise<Buffer> {
   if (offline) throw new CliError('offline', 'Remote assets and catalogs are unavailable in offline mode. Supply verified local files.');
   if (!/^[a-f0-9]{64}$/.test(sha256)) throw new CliError('integrity', 'Supply the exact SHA-256 digest for the remote release artifact.');
   if (new URL(url).protocol !== 'https:' && !(allowLoopback && loopback(new URL(url)))) throw new CliError('source', 'Release artifacts must use HTTPS.');
+  return retryDropped(() => downloadOnce(url, sha256, limit));
+}
+
+async function downloadOnce(url: string, sha256: string, limit: number): Promise<Buffer> {
   // A slow connection may take minutes for a large package; only a download that stops is abandoned.
   const controller = new AbortController();
   let timer: ReturnType<typeof setTimeout> | undefined;
   const progressed = () => {
     clearTimeout(timer);
-    timer = setTimeout(() => controller.abort(new CliError('source', `The download stopped for ${STALL_MS / 1000} s. Check your connection and run the command again.`)), STALL_MS);
+    timer = setTimeout(() => controller.abort(new Dropped('source', `The download stopped for ${STALL_MS / 1000} s. Check your connection and run the command again.`)), STALL_MS);
   };
   try {
     let address = url;

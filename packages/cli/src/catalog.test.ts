@@ -54,9 +54,29 @@ describe('pinned remote release catalog', () => {
     await vi.advanceTimersByTimeAsync(STALL_MS * (parts.length + 1));
     await expect(done).resolves.toEqual(artifact);
     serve(1);
+    // A stalled download is tried twice more before it gives up.
     const failed = expect(pinnedDownload('https://releases.example/package.tgz', digest(artifact), 100)).rejects.toThrow('The download stopped for 30 s');
-    await vi.advanceTimersByTimeAsync(STALL_MS * 3);
+    await vi.advanceTimersByTimeAsync(STALL_MS * 8);
     await failed;
+  });
+
+  it('tries a dropped connection again, and never a download that came back wrong', async () => {
+    const artifact = bytes('package');
+    let calls = 0;
+    vi.stubGlobal('fetch', async () => {
+      calls += 1;
+      if (calls === 1) throw new TypeError('fetch failed');
+      return new Response(artifact);
+    });
+    vi.useFakeTimers();
+    const done = pinnedDownload('https://releases.example/package.tgz', digest(artifact), 100);
+    await vi.advanceTimersByTimeAsync(5000);
+    await expect(done).resolves.toEqual(artifact);
+    expect(calls).toBe(2);
+    calls = 0;
+    vi.stubGlobal('fetch', async () => ((calls += 1), new Response('wrong bytes')));
+    await expect(pinnedDownload('https://releases.example/package.tgz', digest(artifact), 100)).rejects.toThrow('SHA-256');
+    expect(calls).toBe(1);
   });
 
   it('makes no network request in offline mode', async () => {
