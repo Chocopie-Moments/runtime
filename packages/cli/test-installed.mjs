@@ -53,13 +53,13 @@ try {
     assert.equal(preview.applied, false);
     assert.deepEqual(readFileSync(join(app, 'package.json')), before);
     assert.equal(existsSync(join(app, '.choco/installations.json')), false);
-    command(['add', fixture, ...args, '--yes', '--offline']);
+    command(['add', fixture, ...args, '--offline']);
     assert.equal(command(['doctor', '--project', app]).result.healthy, true);
     const receipt = JSON.parse(readFileSync(join(app, '.choco/installations.json')));
     assert.equal(receipt.installations[0].target, target);
     assert.equal(receipt.installations[0].sha256, hash(readFileSync(fixture)));
     assert.equal(Object.keys(receipt.dependencies).includes('@chocopie-moments/react'), target === 'react');
-    const unchanged = command(['add', fixture, ...args, '--yes', '--offline']).result;
+    const unchanged = command(['add', fixture, ...args, '--offline']).result;
     assert.deepEqual(unchanged.changed, []);
 
     const wrapper = join(app, `src/choco/moment.${target === 'react' ? 'tsx' : 'ts'}`);
@@ -79,14 +79,14 @@ try {
       execFileSync(process.execPath, [join(app, 'imports.mjs')], { cwd: app, stdio: 'pipe' });
     }
 
-    command(['update', updated, ...args, '--yes', '--offline']);
+    command(['update', updated, ...args, '--offline']);
     assert.equal(hash(readFileSync(join(app, 'assets/choco/moment.choco'))), hash(readFileSync(updated)));
     const generated = readFileSync(wrapper);
     writeFileSync(wrapper, '// Application edit\n');
-    assert.equal(command(['update', fixture, ...args, '--yes'], false).error.code, 'conflict');
+    assert.equal(command(['update', fixture, ...args], false).error.code, 'conflict');
     assert.equal(readFileSync(wrapper, 'utf8'), '// Application edit\n');
     writeFileSync(wrapper, generated);
-    command(['remove', ...args, '--yes', '--offline']);
+    command(['remove', ...args, '--offline']);
     assert.equal(existsSync(wrapper), false);
     assert.equal(existsSync(join(app, 'assets/choco/moment.choco')), false);
     const final = JSON.parse(readFileSync(join(app, 'package.json')));
