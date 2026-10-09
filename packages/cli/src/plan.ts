@@ -51,9 +51,9 @@ export async function planAdd(app: ReturnType<typeof project>, name: string, ass
   if (!update && existing !== undefined && existing.sha256 !== digest(asset)) throw new CliError('exists', `An asset named ${name} is already installed. Use choco update.`);
   const decoded = await decodeChoco(asset);
   const requirements = await installedAssets(app.root, installed);
-  const release = await catalog(releaseFile, catalogOptions);
   const requiredPackages = new Set(installed.installations.filter(item => item.name !== name).flatMap(item => item.target === 'react-native' ? ['@chocopie-moments/react-native'] : item.target === 'react' ? ['@chocopie-moments/runtime', '@chocopie-moments/react'] : ['@chocopie-moments/runtime']));
   for (const dependency of app.target === 'react-native' ? ['@chocopie-moments/react-native'] : app.target === 'react' ? ['@chocopie-moments/runtime', '@chocopie-moments/react'] : ['@chocopie-moments/runtime']) requiredPackages.add(dependency);
+  const release = await catalog(releaseFile, { ...catalogOptions, packages: requiredPackages });
   for (const dependency of requiredPackages) if (!release.packages.some(pkg => pkg.name === dependency))
     throw new CliError('catalog', `The release catalog is missing ${dependency}. Supply the complete tested package artifacts.`);
   compatible(release, [...requirements.filter((_, index) => installed.installations[index].name !== name), decoded.manifest]);
