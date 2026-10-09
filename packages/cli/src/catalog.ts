@@ -13,10 +13,12 @@ const catalogSchema = z.object({
 export type Requirements = { formatVersion: number; semanticsVersion: number; required: readonly { id: string; version: number }[] };
 
 /** Local catalogs are explicitly supplied release artifacts; their package hashes are mandatory. */
-export async function pinnedDownload(url: string, sha256: string, limit: number, offline = false): Promise<Buffer> {
+/** A local development server on this machine; only an explicit CHOCOPIE_ORIGIN reaches one. */
+export const loopback = (url: URL) => url.protocol === 'http:' && ['127.0.0.1', 'localhost', '[::1]'].includes(url.hostname);
+export async function pinnedDownload(url: string, sha256: string, limit: number, offline = false, allowLoopback = false): Promise<Buffer> {
   if (offline) throw new CliError('offline', 'Remote assets and catalogs are unavailable in offline mode. Supply verified local files.');
   if (!/^[a-f0-9]{64}$/.test(sha256)) throw new CliError('integrity', 'Supply the exact SHA-256 digest for the remote release artifact.');
-  if (new URL(url).protocol !== 'https:') throw new CliError('source', 'Release artifacts must use HTTPS.');
+  if (new URL(url).protocol !== 'https:' && !(allowLoopback && loopback(new URL(url)))) throw new CliError('source', 'Release artifacts must use HTTPS.');
   let address = url;
   let response: Response | undefined;
   for (let redirects = 0; redirects <= 5; redirects++) {
