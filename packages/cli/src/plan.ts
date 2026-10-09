@@ -8,7 +8,8 @@ import type { Receipt } from './receipt.ts';
 import { usage } from './usage.ts';
 import { admitNative, metro } from './metro.ts';
 
-export type Plan = { changes: Change[]; packages: boolean; preserved: string[] };
+/** dependencies are the catalog packages the plan pins, each checked against its catalog hash. */
+export type Plan = { changes: Change[]; packages: boolean; preserved: string[]; dependencies?: { name: string; version: string }[] };
 const json = (value: unknown) => bytes(`${JSON.stringify(value, null, 2)}\n`);
 function changes(root: string, snapshot: ReadonlyMap<string, Buffer | null>) {
   const entries = new Map<string, Change>();
@@ -90,7 +91,8 @@ export async function planAdd(app: ReturnType<typeof project>, name: string, ass
   planned.put('package.json', json(app.manifest));
   planned.put(RECEIPT, json(installed));
   const result = planned.all();
-  return { changes: result, packages: result.some(change => change.path === 'package.json'), preserved: [] };
+  const dependencies = release.packages.filter(pkg => requiredPackages.has(pkg.name)).map(({ name, version }) => ({ name, version }));
+  return { changes: result, packages: result.some(change => change.path === 'package.json'), preserved: [], dependencies };
 }
 export function planRemove(app: ReturnType<typeof project>, name: string): Plan {
   const data = read(app.root, RECEIPT);

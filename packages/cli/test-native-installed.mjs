@@ -32,7 +32,7 @@ try {
   writeFileSync(join(root, 'metro.config.js'), metroBefore);
   const command = (args, ok = true) => {
     let result;
-    try { result = execFileSync(process.execPath, [join(root, 'node_modules/@chocopie-moments/cli/dist/index.js'), ...args, '--json'], { cwd: root, encoding: 'utf8' }); }
+    try { result = execFileSync(process.execPath, [join(root, 'node_modules/@chocopie-moments/cli/dist/index.js'), ...args, ...(['add', 'update', 'remove'].includes(args[0]) && !args.includes('--dry-run') ? ['--yes'] : []), '--json'], { cwd: root, encoding: 'utf8' }); }
     catch (error) { if (ok) throw error; result = error.stdout; }
     const parsed = JSON.parse(result); assert.equal(parsed.ok, ok, JSON.stringify(parsed)); return parsed;
   };

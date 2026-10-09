@@ -1,31 +1,24 @@
 import { z } from 'zod';
 import { CHOCO_LIMITS } from '../../../src/codec/archive.ts';
-import { pinnedDownload } from './catalog.ts';
+import { loopback, pinnedDownload } from './catalog.ts';
 import { CliError } from './files.ts';
 
-/** A Chocopie export id, as Use shows it: the moment's slug and its random capability. */
+/** A Chocopie install id, as Use shows it: the moment's slug and a random part. */
 export const MOMENT_ID = /^[a-z0-9-]+-[\w-]{16,64}$/;
 const ORIGIN = 'https://app.chocopie.lol';
-const https = z.string().url().refine(value => new URL(value).protocol === 'https:', 'Expected HTTPS.');
 const sha256 = z.string().regex(/^[a-f0-9]{64}$/);
-/** What Chocopie answers for an id. Unknown fields are ignored so the service can add some. */
-const resolutionSchema = z.object({
-  format: z.literal('chocopie-install'),
-  version: z.literal(1),
-  id: z.string(),
-  name: z.string().regex(/^[a-z][a-z0-9-]{0,47}$/),
-  asset: z.object({ url: https, sha256 }),
-  catalog: z.object({ url: https, sha256 }),
-});
-export type Resolved = { name: string; data: Buffer; catalog: { url: string; sha256: string } };
+export type Resolved = { id: string; origin: string; name: string; app?: string; data: Buffer; catalog: { url: string; sha256: string } };
 
-/** CHOCOPIE_ORIGIN points the CLI at another Chocopie deployment; it must still be HTTPS. */
+/**
+ * CHOCOPIE_ORIGIN points the CLI at another Chocopie deployment over HTTPS, or at a development
+ * server on this machine. Integrity never depends on it: every download is checked by hash.
+ */
 function origin() {
   const value = process.env.CHOCOPIE_ORIGIN ?? ORIGIN;
   const url = URL.canParse(value) ? new URL(value) : undefined;
-  if (url?.protocol !== 'https:' || url.pathname !== '/' || url.search || url.hash || url.username || url.password)
-    throw new CliError('source', 'CHOCOPIE_ORIGIN must be an HTTPS origin such as https://app.chocopie.lol.');
-  return url.origin;
+  if (url === undefined || !(url.protocol === 'https:' || loopback(url)) || url.pathname !== '/' || url.search || url.hash || url.username || url.password)
+    throw new CliError('source', 'CHOCOPIE_ORIGIN must be an HTTPS origin such as https://app.chocopie.lol, or a server on this machine.');
+  return url;
 }
 
 /**
@@ -34,8 +27,11 @@ function origin() {
  */
 export async function resolveMoment(id: string, offline = false): Promise<Resolved> {
   if (offline) throw new CliError('offline', 'A moment id needs Chocopie. In offline mode, supply a local .choco file.');
-  const response = await fetch(`${origin()}/r/${encodeURIComponent(id)}/install`, {
-    redirect: 'error', headers: { accept: 'application/json' }, signal: AbortSignal.timeout(30_000),
+  const base = origin();
+  const local = loopback(base);
+  const url = z.string().url().refine(value => new URL(value).protocol === 'https:' || (local && loopback(new URL(value))), 'Expected HTTPS.');
+  const response = await fetch(new URL(`/r/${encodeURIComponent(id)}/install`, base), {
+    redirect: 'error', headers: { accept: 'application/json' }, signal: AbortSignal.timeout(60_000),
   }).catch(() => { throw new CliError('source', 'Chocopie could not be reached. Check your connection and try again.'); });
   const text = await response.text();
   if (text.length > 65_536) throw new CliError('source', 'Chocopie answered with more than a moment’s install details.');
@@ -45,8 +41,24 @@ export async function resolveMoment(id: string, offline = false): Promise<Resolv
     const message = z.object({ error: z.string().max(300) }).safeParse(body);
     throw new CliError('unavailable', message.success ? message.data.error : `Chocopie could not resolve this moment (HTTP ${response.status}). Try again.`);
   }
-  const parsed = resolutionSchema.safeParse(body);
-  if (!parsed.success || parsed.data.id !== id) throw new CliError('source', 'Chocopie’s answer for this id was not a valid install description.');
-  const { name, asset, catalog } = parsed.data;
-  return { name, catalog, data: await pinnedDownload(asset.url, asset.sha256, CHOCO_LIMITS.compressed) };
+  // Unknown fields are ignored so the service can add some.
+  const parsed = z.object({
+    format: z.literal('chocopie-install'), version: z.literal(1), id: z.literal(id),
+    name: z.string().regex(/^[a-z][a-z0-9-]{0,47}$/), app: z.string().min(1).max(80).optional(),
+    asset: z.object({ url, sha256 }), catalog: z.object({ url: z.string().url().refine(value => new URL(value).protocol === 'https:'), sha256 }),
+  }).safeParse(body);
+  if (!parsed.success) throw new CliError('source', 'Chocopie’s answer for this id was not a valid install description.');
+  const { name, app, asset, catalog } = parsed.data;
+  return { id, origin: base.origin, name, app, catalog, data: await pinnedDownload(asset.url, asset.sha256, CHOCO_LIMITS.compressed, false, local) };
+}
+
+/**
+ * Tells the moment's Use sheet where it was added. Only the project's name, the generated file and
+ * the platform are sent. It never delays or fails an install: a report that cannot be sent is dropped.
+ */
+export async function reportAdded(moment: Resolved, added: { project: string; file: string; target: string }) {
+  await fetch(new URL(`/r/${encodeURIComponent(moment.id)}/installed`, moment.origin), {
+    method: 'POST', redirect: 'error', headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ ...added, project: added.project.slice(0, 80) }), signal: AbortSignal.timeout(3_000),
+  }).then(response => response.body?.cancel(), () => undefined);
 }

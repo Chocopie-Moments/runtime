@@ -30,7 +30,7 @@ try {
     npm(['install', '--offline', '--ignore-scripts', '--no-audit', '--no-fund'], app);
     const command = (args, ok = true) => {
       let output;
-      try { output = execFileSync(process.execPath, [join(app, 'node_modules/@chocopie-moments/cli/dist/index.js'), ...args, '--json'], { cwd: app, encoding: 'utf8' }); }
+      try { output = execFileSync(process.execPath, [join(app, 'node_modules/@chocopie-moments/cli/dist/index.js'), ...args, ...(['add', 'update', 'remove'].includes(args[0]) && !args.includes('--dry-run') ? ['--yes'] : []), '--json'], { cwd: app, encoding: 'utf8' }); }
       catch (error) { if (ok) throw error; output = error.stdout; }
       const result = JSON.parse(output);
       assert.equal(result.ok, ok, JSON.stringify(result));

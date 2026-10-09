@@ -1,20 +1,24 @@
 import { parseArgs } from 'node:util';
 import { existsSync, lstatSync, readFileSync } from 'node:fs';
+import { basename } from 'node:path';
+import { createInterface } from 'node:readline/promises';
 import { decodeChoco } from '../../../src/codec/codec.ts';
 import { CHOCO_LIMITS } from '../../../src/codec/archive.ts';
 import { apply, assertRecovered, CliError, digest, locked, recover, releaseStaleLock } from './files.ts';
 import { doctor, planAdd, planRemove } from './plan.ts';
 import { installPackages, project } from './project.ts';
-import { MOMENT_ID, resolveMoment } from './resolve.ts';
-import { report } from './report.ts';
+import { MOMENT_ID, reportAdded, resolveMoment } from './resolve.ts';
+import type { Resolved } from './resolve.ts';
+import { planned, report } from './report.ts';
 
-type Source = { data: Buffer; name?: string; catalog?: { url: string; sha256: string } };
+type Source = { data: Buffer; name?: string; catalog?: { url: string; sha256: string }; resolved?: Resolved };
 /** A moment comes from Chocopie by its id, or from a local .choco file with its own name and catalog. */
 async function source(value: string, args: ReturnType<typeof options>): Promise<Source> {
   if (MOMENT_ID.test(value) && !existsSync(value)) {
     if (args.sha256 !== undefined || args.catalog !== undefined || args['catalog-sha256'] !== undefined)
       throw new CliError('arguments', 'A moment id pins its own asset and catalog. Drop --sha256 and --catalog.');
-    return resolveMoment(value, args.offline);
+    const resolved = await resolveMoment(value, args.offline);
+    return { ...resolved, resolved };
   }
   if (value.includes('://')) throw new CliError('source', 'Use the moment id from Chocopie or a local .choco file.');
   const stat = lstatSync(value, { throwIfNoEntry: false });
@@ -43,10 +47,19 @@ const help = `Usage:
 
 Options:
   --project <folder>   The app to change (default: this folder)
+  --yes                Apply without asking (for scripts and coding agents)
   --dry-run            Show what would change without changing anything
-  --json               Machine-readable output
+  --json               Machine-readable output; needs --yes or --dry-run to change files
   --offline            Use only local files
   --sha256 <hash>  --catalog <release.json or HTTPS URL>  --catalog-sha256 <hash>`;
+/** Asks before writing, at a terminal. Scripts and agents pass --yes; without a terminal they must. */
+async function confirm(question: string, args: ReturnType<typeof options>) {
+  if (args.yes) return true;
+  if (args.json || !process.stdin.isTTY) throw new CliError('confirmation', 'Add --yes to apply without the question, or --dry-run to preview.');
+  const terminal = createInterface({ input: process.stdin, output: process.stdout });
+  try { return /^(y|yes)?$/i.test((await terminal.question(`${question} (Y/n) `)).trim()); }
+  finally { terminal.close(); }
+}
 async function run(args: ReturnType<typeof options>) {
   if (args.help || args.command === undefined) return { help };
   if (args.extras.length > 0) throw new CliError('arguments', 'Too many positional arguments. Use --help.');
@@ -57,7 +70,6 @@ async function run(args: ReturnType<typeof options>) {
     return { sha256: digest(data), manifest: decoded.manifest, attribution: decoded.attribution };
   }
   if (!['add', 'update', 'remove', 'doctor', 'recover'].includes(args.command)) throw new CliError('arguments', `Unknown command: ${args.command}. Use --help.`);
-  if (args.yes && args.command !== 'recover') throw new CliError('arguments', `${args.command} applies without --yes. Add --dry-run to preview it instead.`);
   const app = project(args.project);
   if (args.command === 'recover') {
     if (!args.yes || args['dry-run']) throw new CliError('confirmation', 'Recovery changes journaled files or retries dependency installation. Run recover --yes to proceed.');
@@ -75,8 +87,17 @@ async function run(args: ReturnType<typeof options>) {
     ...(app.target !== 'react-native' ? {} : { native: { executionVerified: false, nextSteps: ['Run pod install in ios for an iOS application.', 'Rebuild the native application; installing JavaScript dependencies does not link the native view.', 'Android host execution remains a separate verification gate.'] } }),
   };
   if (args['dry-run']) return { ...summary, applied: false };
-  if (plan.changes.length > 0) locked(app.root, () => apply(app.root, plan.changes, () => { if (plan.packages) installPackages(app.root, args.offline ?? false); }));
-  return { ...summary, applied: true };
+  if (plan.changes.length > 0) {
+    if (!args.json) process.stdout.write(planned({ ...summary, applied: false }, { moment: moment === undefined ? undefined : await decodeChoco(moment.data), app: moment?.resolved?.app, project: projectName(app), dependencies: plan.dependencies ?? [], asset: moment?.data.length }));
+    if (!(await confirm(`${args.command === 'remove' ? 'Remove' : args.command === 'update' ? 'Update' : 'Add'} it?`, args))) return { ...summary, applied: false, declined: true };
+    locked(app.root, () => apply(app.root, plan.changes, () => { if (plan.packages) installPackages(app.root, args.offline ?? false); }));
+  }
+  const file = summary.changed.find(change => change.path.startsWith('src/choco/'))?.path ?? `src/choco/${name}.${app.target === 'web' ? 'ts' : 'tsx'}`;
+  if (moment?.resolved !== undefined) await reportAdded(moment.resolved, { project: projectName(app), file, target: app.target });
+  return { ...summary, applied: true, ...(moment?.resolved === undefined ? {} : { id: moment.resolved.id }) };
+}
+function projectName(app: ReturnType<typeof project>) {
+  return app.manifest.name ?? basename(app.root);
 }
 const json = process.argv.includes('--json');
 try {
