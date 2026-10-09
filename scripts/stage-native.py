@@ -35,7 +35,8 @@ assert digest(tarball) == {key: rn[key] for key in ['bytes', 'sha256']}
 shutil.copyfile(tarball, release / tarball.name)
 receipt['native'] = {archive.name: digest(archive)}
 # SwiftPM remote binary targets require a ZIP containing the XCFramework itself.
-versions = {item['version'] for item in receipt['packages'].values()}
+# The engine family shares one version; a CLI-only release may be ahead of it.
+versions = {item['version'] for name, item in receipt['packages'].items() if name != '@chocopie-moments/cli'}
 assert len(versions) == 1, 'Prepare Swift artifacts from one release family'
 version = next(iter(versions))
 binary = release / f'choco-native-{version}.zip'
